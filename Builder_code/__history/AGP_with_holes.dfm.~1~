@@ -1,0 +1,61 @@
+object agp_with_holes_aplikacija: Tagp_with_holes_aplikacija
+  Left = 0
+  Top = 0
+  Caption = 'AGP'
+  ClientHeight = 635
+  ClientWidth = 952
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Slika: TImage
+    Left = 8
+    Top = 8
+    Width = 761
+    Height = 545
+  end
+  object broj_vrhova_poligona: TEdit
+    Left = 775
+    Top = 24
+    Width = 83
+    Height = 21
+    TabOrder = 0
+  end
+  object generisi: TButton
+    Left = 864
+    Top = 24
+    Width = 75
+    Height = 21
+    Caption = 'Generisi'
+    TabOrder = 1
+  end
+  object radio_dodaj_rupu: TRadioButton
+    Left = 775
+    Top = 96
+    Width = 113
+    Height = 17
+    Caption = 'Crtaj rupu'
+    TabOrder = 2
+  end
+  object radio_crtaj_poligon: TRadioButton
+    Left = 775
+    Top = 64
+    Width = 113
+    Height = 17
+    Caption = 'Crtaj poligon'
+    TabOrder = 3
+  end
+  object radio_dodaj_kameru: TRadioButton
+    Left = 775
+    Top = 128
+    Width = 113
+    Height = 17
+    Caption = 'Dodaj kameru'
+    TabOrder = 4
+  end
+end

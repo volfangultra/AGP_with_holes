@@ -1,0 +1,17 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "AGP_with_holes.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+Tagp_aplikacija *agp_aplikacija;
+//---------------------------------------------------------------------------
+__fastcall Tagp_aplikacija::Tagp_aplikacija(TComponent* Owner): TForm(Owner){
+
+}
+//---------------------------------------------------------------------------
+
+

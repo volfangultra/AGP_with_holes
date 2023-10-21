@@ -1,0 +1,89 @@
+object agp_aplikacija: Tagp_aplikacija
+  Left = 0
+  Top = 0
+  Caption = 'AGP'
+  ClientHeight = 635
+  ClientWidth = 952
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object image: TImage
+    Left = 8
+    Top = 8
+    Width = 753
+    Height = 505
+    OnMouseDown = imageMouseDown
+    OnMouseMove = imageMouseMove
+    OnMouseUp = imageMouseUp
+  end
+  object input_num_vertices_polygon: TEdit
+    Left = 775
+    Top = 24
+    Width = 83
+    Height = 21
+    TabOrder = 0
+  end
+  object generate: TButton
+    Left = 864
+    Top = 24
+    Width = 75
+    Height = 21
+    Caption = 'Generate'
+    TabOrder = 1
+  end
+  object radio_draw_hole: TRadioButton
+    Left = 775
+    Top = 96
+    Width = 113
+    Height = 17
+    Caption = 'Draw hole'
+    TabOrder = 2
+  end
+  object radio_draw_polygon: TRadioButton
+    Left = 775
+    Top = 64
+    Width = 113
+    Height = 17
+    Caption = 'Draw Polygon'
+    TabOrder = 3
+  end
+  object radio_add_camera: TRadioButton
+    Left = 775
+    Top = 128
+    Width = 113
+    Height = 17
+    Caption = 'Add Camera'
+    TabOrder = 4
+  end
+  object button_finish_object: TButton
+    Left = 775
+    Top = 151
+    Width = 164
+    Height = 25
+    Caption = 'Finish Object'
+    TabOrder = 5
+    OnClick = button_finish_objectClick
+  end
+  object button_clean: TButton
+    Left = 775
+    Top = 496
+    Width = 164
+    Height = 25
+    Caption = 'Clear'
+    TabOrder = 6
+    OnClick = button_cleanClick
+  end
+  object text_coordinate: TEdit
+    Left = 775
+    Top = 544
+    Width = 163
+    Height = 25
+    TabOrder = 7
+  end
+end
