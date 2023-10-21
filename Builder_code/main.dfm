@@ -109,14 +109,14 @@ object agp_aplication: Tagp_aplication
     Left = 775
     Top = 552
     Width = 163
-    Height = 25
+    Height = 21
     TabOrder = 7
   end
   object text_surface_area_covered: TEdit
     Left = 137
     Top = 518
     Width = 80
-    Height = 25
+    Height = 21
     TabOrder = 8
   end
 end
