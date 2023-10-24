@@ -43,7 +43,7 @@ void __fastcall Tagp_aplication::image_mouse_down(TObject *Sender, TMouseButton 
 	}
 	else if(radio_draw_hole->Checked){
 		int broj_rupa = holes.size();
-		holes[broj_rupa - 1].vertices.push_back(nova);
+        holes[broj_rupa - 1].vertices.push_back(nova);
 		int n = holes[broj_rupa - 1].vertices.size();
 		if(n > 1){
            Segment(holes[broj_rupa - 1].vertices[n - 2], nova).draw(image);
@@ -136,36 +136,4 @@ void __fastcall Tagp_aplication::button_finish_object_click(TObject *Sender){
 }
 //---------------------------------------------------------------------------
 
-
-void __fastcall Tagp_aplication::ButtonPolygonAreaClick(TObject *Sender)
-{
-	double sum1 = 0, sum2 = 0;
-	for(int i=0; i<outside_polygon.vertices.size()-1; i++) {
-		sum1 += outside_polygon.vertices[i].x * outside_polygon.vertices[i+1].y;
-		sum2 += outside_polygon.vertices[i].y * outside_polygon.vertices[i+1].x;
-	}
-	sum1 += outside_polygon.vertices[outside_polygon.vertices.size()-1].x
-			* outside_polygon.vertices[0].y;
-	sum2 += outside_polygon.vertices[0].x
-			* outside_polygon.vertices[outside_polygon.vertices.size()-1].y;
-
-	double sum = 0;
-	for (int i=0; i<holes.size(); i++) {
-	   double sum_holes1 = 0, sum_holes2 = 0;
-	   if (holes[i].vertices.size()>0) {
-		for(int j=0; j<holes[i].vertices.size()-1; j++) {
-			sum_holes1 += holes[i].vertices[j].x * holes[i].vertices[j+1].y;
-			sum_holes2 += holes[i].vertices[j].y * holes[i].vertices[j+1].x;
-		}
-        sum_holes1 += holes[i].vertices[holes[i].vertices.size()-1].x
-					* holes[i].vertices[0].y;
-		sum_holes2 += holes[i].vertices[0].x
-					* holes[i].vertices[holes[i].vertices.size()-1].y;
-		sum += abs(sum_holes1 - sum_holes2)/2;
-	   }
-	}
-
-	ShowMessage(abs(sum1 - sum2)/2 - sum);
-}
-//---------------------------------------------------------------------------
 

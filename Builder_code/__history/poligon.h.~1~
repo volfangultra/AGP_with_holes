@@ -59,7 +59,7 @@ public:
 	void draw(TImage*, TColor color = clBlue);
 	void fill_color(TImage*, TColor boja = clAqua);
 	double surface_area();//Za implementirat
-	Simple_polygon intersect(Simple_polygon); //Za implementirat
+    Simple_polygon intersect(Simple_polygon); //Za implementirat
 	friend class Tagp_aplication;
 };
 
