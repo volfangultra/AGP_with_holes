@@ -142,15 +142,27 @@ void __fastcall Tagp_aplication::button_finish_object_click(TObject *Sender){
 
 void __fastcall Tagp_aplication::PolygonsIntersectionClick(TObject *Sender)
 {
-	vector<Dot> intersectionPolygon = cameras[0].view.GetIntersectionOfPolygons(cameras[1].view);
-	ShowMessage(intersectionPolygon.size());
-	for (int i=0; i < intersectionPolygon.size(); i++) {
-		int x1=intersectionPolygon[i].x;
-		int x2=intersectionPolygon[i+1].x;
-		int y1=intersectionPolygon[i].y;
-		int y2=intersectionPolygon[i+1].y;
-		Segment d = Segment(Dot(x1,y1), Dot(x2,y2));
-		d.draw(image, clRed);
+
+	for(int i=0;i<cameras.size();i++){
+		for(int j=0;j<i;j++){
+			vector<Dot> intersectionPolygon = cameras[i].view.GetIntersectionOfPolygons(cameras[j].view);
+			if(intersectionPolygon.size()!=0){
+				for (int k=0; k < intersectionPolygon.size()-1; k++) {
+					int x1=intersectionPolygon[k].x;
+					int x2=intersectionPolygon[k+1].x;
+					int y1=intersectionPolygon[k].y;
+					int y2=intersectionPolygon[k+1].y;
+					Segment d = Segment(Dot(x1,y1), Dot(x2,y2));
+					d.draw(image, clRed);
+				}
+				int x1=intersectionPolygon[0].x;
+				int x2=intersectionPolygon[intersectionPolygon.size()-1].x;
+				int y1=intersectionPolygon[0].y;
+				int y2=intersectionPolygon[intersectionPolygon.size()-1].y;
+				Segment d = Segment(Dot(x1,y1), Dot(x2,y2));
+				d.draw(image, clRed);
+				}
+			}
 	}
 }
 //---------------------------------------------------------------------------

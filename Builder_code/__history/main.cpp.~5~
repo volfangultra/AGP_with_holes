@@ -91,7 +91,7 @@ void __fastcall Tagp_aplication::image_mouse_up(TObject *Sender, TMouseButton Bu
 		c.view.draw(image);
         c.view.fill_color(image, clYellow);
 
-		cameras.push_back(c);
+		cameras.push_back(Camera(view));
 	}
 }
 
@@ -142,13 +142,12 @@ void __fastcall Tagp_aplication::button_finish_object_click(TObject *Sender){
 
 void __fastcall Tagp_aplication::PolygonsIntersectionClick(TObject *Sender)
 {
-	vector<Dot> intersectionPolygon = cameras[0].view.GetIntersectionOfPolygons(cameras[1].view);
-	ShowMessage(intersectionPolygon.size());
-	for (int i=0; i < intersectionPolygon.size(); i++) {
-		int x1=intersectionPolygon[i].x;
-		int x2=intersectionPolygon[i+1].x;
-		int y1=intersectionPolygon[i].y;
-		int y2=intersectionPolygon[i+1].y;
+	Simple_polygon intersectionPolygon = cameras[0].view.intersect(cameras[1].view);
+	for (int i=0; i < intersectionPolygon.vertices.size(); i++) {
+		int x1=intersectionPolygon.vertices[i].x;
+		int x2=intersectionPolygon.vertices[i+1].x;
+		int y1=intersectionPolygon.vertices[i].y;
+		int y2=intersectionPolygon.vertices[i+1].y;
 		Segment d = Segment(Dot(x1,y1), Dot(x2,y2));
 		d.draw(image, clRed);
 	}

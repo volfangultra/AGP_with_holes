@@ -16,6 +16,7 @@ object agp_aplication: Tagp_aplication
     Top = 8
     Width = 753
     Height = 505
+    OnClick = imageClick
     OnMouseDown = image_mouse_down
     OnMouseMove = image_mouse_move
     OnMouseUp = image_mouse_up

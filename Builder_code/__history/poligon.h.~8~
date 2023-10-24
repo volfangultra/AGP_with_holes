@@ -59,9 +59,7 @@ public:
 	void draw(TImage*, TColor color = clBlue);
 	void fill_color(TImage*, TColor boja = clAqua);
 	double surface_area();//Za implementirat
-	bool IsPointInsidePoly(Dot);
-	vector<Dot> GetIntersectionPoints(Dot,Dot);
-	vector<Dot> GetIntersectionOfPolygons(Simple_polygon&);
+	bool IsPointInsidePoly(Dot); //Za implementirat
 	friend class Tagp_aplication;
 };
 

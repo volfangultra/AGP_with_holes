@@ -3,7 +3,7 @@
 #pragma hdrstop
 
 #include "poligon.h"
-#include <algorithm>
+
 //---------------------------------------------------------------------------
 
 bool operator<(Dot A, Dot B) {
@@ -286,84 +286,8 @@ Dot GetIntersectionPoint(Dot l1p1, Dot l1p2, Dot l2p1, Dot l2p2) {
 		);
         if (online1 && online2)
 			return Dot(x, y);
-	}
-	return Dot(0.0, 0.0);  // Intersection is out of at least one segment
-}bool Simple_polygon::IsPointInsidePoly(Dot test){
-	int i;
-	int j;
-	bool result = false;
-	for (i = 0, j = vertices.size() - 1; i < vertices.size(); j = i++)
-	{
-		if ((vertices[i].y > test.y) != (vertices[j].y > test.y) &&
-			(test.x < (vertices[j].x - vertices[i].x) * (test.y - vertices[i].y) / (vertices[j].y - vertices[i].y) + vertices[i].x))
-		{
-			result = !result;
-        }
     }
-    return result;
-}vector<Dot> Simple_polygon::GetIntersectionPoints(Dot l1p1, Dot l1p2){
-	vector<Dot> intersectionPoints;;
-	for (int i = 0; i < vertices.size(); i++)
-	{
-		int next = (i + 1 == vertices.size()) ? 0 : i + 1;
-		Dot ip = GetIntersectionPoint(l1p1, l1p2, vertices[i], vertices[next]);
-		if (ip.x != 0.0 && ip.y != 0.0) intersectionPoints.push_back(ip);
-	}
-	return intersectionPoints;
-}void AddPoints(vector<Dot>& pool, vector<Dot> newpoints){
-	for(int i=0;i<newpoints.size();i++)
-	{
-		bool found = false;
-		for(int j=0;j<pool.size();j++)
-		{
-			if (IsEqual(pool[j].x, newpoints[i].x) && IsEqual(pool[j].y, newpoints[i].y))
-			{
-				found = true;
-				break;
-			}
-		}
-		if (!found) pool.push_back(newpoints[i]);
-    }
-}vector<Dot> OrderClockwise(vector<Dot> points){
-    double mX = 0;
-    double mY = 0;
-
-	for (const Dot p : points) {
-		mX += p.x;
-		mY += p.y;
-    }
-
-	mX /= points.size();
-    mY /= points.size();
-
-	sort(points.begin(), points.end(), [&](const Dot& a, const Dot& b) {
-		double angleA = std::atan2(a.y - mY, a.x - mX);
-		double angleB = std::atan2(b.y - mY, b.x - mX);
-        return angleA < angleB;
-    });
-
-	return points;
-}vector<Dot> Simple_polygon::GetIntersectionOfPolygons(Simple_polygon &poly2){
-	vector<Dot> clippedCorners;
-    //Add  the corners of poly1 which are inside poly2
-	for (int i = 0; i < vertices.size(); i++)
-    {
-		if (poly2.IsPointInsidePoly(vertices[i]))
-			AddPoints(clippedCorners, vector<Dot> { vertices[i] });
-	}
-    //Add the corners of poly2 which are inside poly1
-	for (int i = 0; i < poly2.vertices.size(); i++)
-    {
-		if (IsPointInsidePoly(poly2.vertices[i]))
-			AddPoints(clippedCorners, vector<Dot>{ poly2.vertices[i]});
-    }
-	//Add  the intersection points
-	for (int i = 0, next = 1; i < vertices.size(); i++, next = (i + 1 == vertices.size()) ? 0 : i + 1)
-    {
-		AddPoints(clippedCorners, poly2.GetIntersectionPoints(vertices[i], vertices[next]));
-	}
-
-	return OrderClockwise(clippedCorners);
+    return Dot(0.0, 0.0);  // Intersection is out of at least one segment
 }
 
 

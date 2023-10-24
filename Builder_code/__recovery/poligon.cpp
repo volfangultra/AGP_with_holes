@@ -359,9 +359,12 @@ Dot GetIntersectionPoint(Dot l1p1, Dot l1p2, Dot l2p1, Dot l2p2) {
     }
 	//Add  the intersection points
 	for (int i = 0, next = 1; i < vertices.size(); i++, next = (i + 1 == vertices.size()) ? 0 : i + 1)
-    {
-		AddPoints(clippedCorners, poly2.GetIntersectionPoints(vertices[i], vertices[next]));
+	{
+		if(clippedCorners.size()!=0)
+			AddPoints(clippedCorners, poly2.GetIntersectionPoints(vertices[i], vertices[next]));
 	}
+
+	if(clippedCorners.size()==0) return vector<Dot>();
 
 	return OrderClockwise(clippedCorners);
 }

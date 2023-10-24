@@ -142,7 +142,7 @@ void __fastcall Tagp_aplication::button_finish_object_click(TObject *Sender){
 
 void __fastcall Tagp_aplication::PolygonsIntersectionClick(TObject *Sender)
 {
-	vector<Dot> intersectionPolygon = cameras[0].view.GetIntersectionOfPolygons(cameras[1].view);
+	vector<Dot> intersectionPolygon = cameras[0].view.intersect(cameras[1].view);
 	ShowMessage(intersectionPolygon.size());
 	for (int i=0; i < intersectionPolygon.size(); i++) {
 		int x1=intersectionPolygon[i].x;

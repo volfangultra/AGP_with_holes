@@ -333,37 +333,37 @@ Dot GetIntersectionPoint(Dot l1p1, Dot l1p2, Dot l2p1, Dot l2p2) {
 		mY += p.y;
     }
 
-	mX /= points.size();
+    mX /= points.size();
     mY /= points.size();
 
-	sort(points.begin(), points.end(), [&](const Dot& a, const Dot& b) {
+	std::sort(points.begin(), points.end(), [&](const Dot& a, const Dot& b) {
 		double angleA = std::atan2(a.y - mY, a.x - mX);
 		double angleB = std::atan2(b.y - mY, b.x - mX);
         return angleA < angleB;
     });
 
 	return points;
-}vector<Dot> Simple_polygon::GetIntersectionOfPolygons(Simple_polygon &poly2){
-	vector<Dot> clippedCorners;
+}Simple_polygon Simple_polygon::GetIntersectionOfPolygons(Simple_polygon poly2){
+    List<Point2D> clippedCorners = new List<Point2D>();
     //Add  the corners of poly1 which are inside poly2
-	for (int i = 0; i < vertices.size(); i++)
+    for (int i = 0; i < poly1.Corners.Length; i++)
     {
-		if (poly2.IsPointInsidePoly(vertices[i]))
-			AddPoints(clippedCorners, vector<Dot> { vertices[i] });
-	}
-    //Add the corners of poly2 which are inside poly1
-	for (int i = 0; i < poly2.vertices.size(); i++)
-    {
-		if (IsPointInsidePoly(poly2.vertices[i]))
-			AddPoints(clippedCorners, vector<Dot>{ poly2.vertices[i]});
+        if (IsPointInsidePoly(poly1.Corners[i], poly2))
+            AddPoints(clippedCorners, new Point2D[] { poly1.Corners[i] });
     }
-	//Add  the intersection points
-	for (int i = 0, next = 1; i < vertices.size(); i++, next = (i + 1 == vertices.size()) ? 0 : i + 1)
+    //Add the corners of poly2 which are inside poly1
+    for (int i = 0; i < poly2.Corners.Length; i++)
     {
-		AddPoints(clippedCorners, poly2.GetIntersectionPoints(vertices[i], vertices[next]));
-	}
+        if (IsPointInsidePoly(poly2.Corners[i],poly1))
+            AddPoints(clippedCorners, new Point2D[]{ poly2.Corners[i]});
+    }
+    //Add  the intersection points
+    for (int i = 0, next = 1; i < poly1.Corners.Length; i++, next = (i + 1 == poly1.Corners.Length) ? 0 : i + 1)
+    {
+        AddPoints(clippedCorners, GetIntersectionPoints(poly1.Corners[i], poly1.Corners[next], poly2));
+    }
 
-	return OrderClockwise(clippedCorners);
+    return new ConvexPolygon2D(OrderClockwise( clippedCorners.ToArray()));
 }
 
 

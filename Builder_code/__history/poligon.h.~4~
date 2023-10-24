@@ -56,12 +56,11 @@ struct Trougao {
 class Simple_polygon{
 	vector<Dot> vertices;
 public:
+	Simple_polygon(vector<Dot> v):vertices(v){}
 	void draw(TImage*, TColor color = clBlue);
 	void fill_color(TImage*, TColor boja = clAqua);
 	double surface_area();//Za implementirat
-	bool IsPointInsidePoly(Dot);
-	vector<Dot> GetIntersectionPoints(Dot,Dot);
-	vector<Dot> GetIntersectionOfPolygons(Simple_polygon&);
+	Simple_polygon intersect(Simple_polygon&); //Za implementirat
 	friend class Tagp_aplication;
 };
 
@@ -79,6 +78,9 @@ public:
 
 };
 
+
+bool isInside(Dot point, vector<Dot>& polygon);
+vector<Dot> sutherlandHodgman(vector<Dot>& subject, vector<Dot>& clip);
 
 
 
