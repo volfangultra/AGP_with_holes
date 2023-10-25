@@ -116,6 +116,7 @@ object agp_aplication: Tagp_aplication
     Width = 80
     Height = 21
     TabOrder = 8
+    OnChange = text_surface_area_coveredChange
   end
   object ButtonPolygonArea: TButton
     Left = 775

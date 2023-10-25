@@ -105,7 +105,6 @@ void __fastcall Tagp_aplication::button_clean_click(TObject *Sender){
 
 	outside_polygon = Simple_polygon();
 	holes = vector<Simple_polygon>{Simple_polygon()};
-	cameras.clear();
 
 }
 //---------------------------------------------------------------------------
