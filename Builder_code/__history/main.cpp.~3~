@@ -140,10 +140,13 @@ void __fastcall Tagp_aplication::button_finish_object_click(TObject *Sender){
 void __fastcall Tagp_aplication::ButtonPolygonAreaClick(TObject *Sender)
 {
 	double sum1 = 0, sum2 = 0;
+
+
 	for(int i=0; i<outside_polygon.vertices.size()-1; i++) {
 		sum1 += outside_polygon.vertices[i].x * outside_polygon.vertices[i+1].y;
 		sum2 += outside_polygon.vertices[i].y * outside_polygon.vertices[i+1].x;
 	}
+
 	sum1 += outside_polygon.vertices[outside_polygon.vertices.size()-1].x
 			* outside_polygon.vertices[0].y;
 	sum2 += outside_polygon.vertices[0].x
@@ -152,20 +155,20 @@ void __fastcall Tagp_aplication::ButtonPolygonAreaClick(TObject *Sender)
 	double sum = 0;
 	for (int i=0; i<holes.size(); i++) {
 	   double sum_holes1 = 0, sum_holes2 = 0;
-	   if (holes[i].vertices.size()>0) {
-		for(int j=0; j<holes[i].vertices.size()-1; j++) {
-			sum_holes1 += holes[i].vertices[j].x * holes[i].vertices[j+1].y;
-			sum_holes2 += holes[i].vertices[j].y * holes[i].vertices[j+1].x;
+	   for(int j=0; j<holes[i].vertices.size()-1; j++) {
+		  //sum_holes1 += holes[i].vertices[j].x * holes[i].vertices[j+1].y;
+		  //sum_holes2 += holes[i].vertices[j].y * holes[i].vertices[j+1].x;
 		}
-        sum_holes1 += holes[i].vertices[holes[i].vertices.size()-1].x
+		/*sum_holes1 += holes[i].vertices[holes[i].vertices.size()-1].x
 					* holes[i].vertices[0].y;
 		sum_holes2 += holes[i].vertices[0].x
 					* holes[i].vertices[holes[i].vertices.size()-1].y;
-		sum += abs(sum_holes1 - sum_holes2)/2;
-	   }
+		sum += abs(sum_holes1 - sum_holes2)/2;   */
 	}
 
-	ShowMessage(abs(sum1 - sum2)/2 - sum);
+	//ShowMessage(abs(sum1 - sum2)/2 - sum);
+	//ShowMessage(abs(sum1 - sum2));
+	ShowMessage(holes[0].vertices.size());
 }
 //---------------------------------------------------------------------------
 
