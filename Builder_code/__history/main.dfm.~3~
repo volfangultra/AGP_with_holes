@@ -95,8 +95,8 @@ object agp_aplication: Tagp_aplication
     OnClick = button_finish_object_click
   end
   object button_clean: TButton
-    Left = 780
-    Top = 488
+    Left = 775
+    Top = 496
     Width = 164
     Height = 25
     Caption = 'Clear'
@@ -105,18 +105,17 @@ object agp_aplication: Tagp_aplication
   end
   object text_coordinate: TEdit
     Left = 775
-    Top = 560
+    Top = 552
     Width = 163
     Height = 21
     TabOrder = 7
   end
   object text_surface_area_covered: TEdit
     Left = 137
-    Top = 526
+    Top = 518
     Width = 80
     Height = 21
     TabOrder = 8
-    OnChange = text_surface_area_coveredChange
   end
   object ButtonPolygonArea: TButton
     Left = 775
@@ -126,14 +125,5 @@ object agp_aplication: Tagp_aplication
     Caption = 'Polygon Area'
     TabOrder = 9
     OnClick = ButtonPolygonAreaClick
-  end
-  object Button1: TButton
-    Left = 775
-    Top = 213
-    Width = 163
-    Height = 25
-    Caption = 'Cameras intersection'
-    TabOrder = 10
-    OnClick = CamerasIntersectionClick
   end
 end

@@ -195,4 +195,3 @@ void __fastcall Tagp_aplication::CamerasIntersectionClick(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-

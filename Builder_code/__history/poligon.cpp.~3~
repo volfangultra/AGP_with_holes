@@ -3,7 +3,6 @@
 #pragma hdrstop
 
 #include "poligon.h"
-#include <algorithm>
 
 //---------------------------------------------------------------------------
 
