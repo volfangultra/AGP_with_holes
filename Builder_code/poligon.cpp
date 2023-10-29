@@ -7,7 +7,14 @@
 
 //---------------------------------------------------------------------------
 
-bool operator<(Dot A, Dot B) {
+bool is_equal(double a, double b, double epsilon = 1e-9) {
+	return std::abs(a - b) <= epsilon;
+}
+
+
+//---------------------------------------------------------------------------
+
+bool operator<(Vertex A, Vertex B) {
     if(A.x < B.x)
         return true;
     else if(A.x > B.x)
@@ -17,13 +24,13 @@ bool operator<(Dot A, Dot B) {
 
 //---------------------------------------------------------------------------
 
-bool operator==(Dot A, Dot B) {
+bool operator==(Vertex A, Vertex B) {
 	return A.x == B.x && A.y == B.y;
 }
 
 //---------------------------------------------------------------------------
 
-void Dot::draw(TImage* slika, TColor color) {
+void Vertex::draw(TImage* slika, TColor color) {
 	slika->Canvas->Brush->Color = color;
 	slika->Canvas->Ellipse(x-SIZE, y-SIZE, x+SIZE, y+SIZE);
     slika->Canvas->Brush->Color = clWhite;
@@ -31,7 +38,7 @@ void Dot::draw(TImage* slika, TColor color) {
 
 //---------------------------------------------------------------------------
 
-Dot& Dot::operator=(const Dot &kopija) {
+Vertex& Vertex::operator=(const Vertex &kopija) {
 	this->x = kopija.x;
 	this->y = kopija.y;
     return *this;
@@ -39,8 +46,8 @@ Dot& Dot::operator=(const Dot &kopija) {
 
 //---------------------------------------------------------------------------
 
-Dot Dot::rotate(Dot center, float angle){
-	Dot result;
+Vertex Vertex::rotate(Vertex center, float angle){
+	Vertex result;
 
 	result.x = (x - center.x) * cos(angle) - (y - center.y) * sin(angle) + center.x;
 	result.y = (x - center.x) * sin(angle) + (y - center.y) * cos(angle) + center.y;
@@ -58,7 +65,7 @@ void Segment::draw(TImage* slika, TColor boja) {
 
 //---------------------------------------------------------------------------
 
-int orientation(Dot A, Dot B, Dot C) {
+int orientation(Vertex A, Vertex B, Vertex C) {
 	double area = A.x * (B.y - C.y) + B.x * (C.y - A.y) + C.x * (A.y - B.y);
 	if (area > 0)
         return -1;
@@ -77,9 +84,9 @@ bool do_segments_intersect(Segment d1, Segment d2) {
 	return condition1 && condition2;
 }
 
-Dot line_intersection(Segment d1, Segment d2) {
-	Dot A = d1.A, B=d1.B;
-	Dot C = d2.A, D=d2.B;
+Vertex line_intersection(Segment d1, Segment d2) {
+	Vertex A = d1.A, B=d1.B;
+	Vertex C = d2.A, D=d2.B;
 
 	double a1 = B.y - A.y;
 	double b1 = A.x - B.x;
@@ -97,13 +104,13 @@ Dot line_intersection(Segment d1, Segment d2) {
 	else{
         double x = (b2*c1 - b1*c2)/determinant;
         double y = (a1*c2 - a2*c1)/determinant;
-		return Dot(x, y);
+		return Vertex(x, y);
 	}
 }
 
 //---------------------------------------------------------------------------
 
-bool is_a_dot_in_triangle(Dot T, Trougao tr) {
+bool is_a_Vertex_in_triangle(Vertex T, Trougao tr) {
 	int o1 = orientation(tr.A, tr.B, T);
 	int o2 = orientation(tr.B, tr.C, T);
 	int o3 = orientation(tr.C, tr.A, T);
@@ -135,13 +142,58 @@ void Simple_polygon::fill_color(TImage* slika, TColor color){
         vertices[i].draw(slika);
 
 }
+
 //---------------------------------------------------------------------------
 
-bool IsEqual(double a, double b, double epsilon = 1e-9) {
-	return std::abs(a - b) <= epsilon;
+double Simple_polygon::surface_area(){
+	double sum1 = 0, sum2 = 0;
+	if(vertices.size() == 0)
+        return 0;
+	for(int i=0; i< vertices.size()-1; i++) {
+		sum1 += vertices[i].x * vertices[i+1].y;
+		sum2 += vertices[i].y * vertices[i+1].x;
+	}
+	sum1 += vertices[vertices.size()-1].x * vertices[0].y;
+	sum2 += vertices[0].x * vertices[vertices.size()-1].y;
+
+    return abs(sum1 - sum2)/2;
+
 }
 
-Dot GetIntersectionPoint(Dot l1p1, Dot l1p2, Dot l2p1, Dot l2p2) {
+//---------------------------------------------------------------------------
+
+bool Simple_polygon::is_convex(){
+
+    //Implementirati is_convex();
+
+    return false;
+}
+
+void Camera::draw(TImage* slika, TColor vertex_color, TColor segment_color){
+	slika->Canvas->Pen->Color = segment_color;
+	slika->Canvas->MoveTo(view.vertices[0].x, view.vertices[0].y);
+	for(int i=1; i<view.vertices.size(); i++) {
+		slika->Canvas->LineTo(view.vertices[i].x, view.vertices[i].y);
+	}
+	slika->Canvas->LineTo(view.vertices[0].x, view.vertices[0].y);
+	slika->Canvas->Pen->Color = clBlack;
+
+}
+
+//---------------------------------------------------------------------------
+
+void Camera::fill_color(TImage* slika, TColor color){
+	slika->Canvas->Brush->Color = color;
+	TPoint polygon_points[view.vertices.size()];
+	for(int i = 0; i < view.vertices.size(); i++)
+		polygon_points[i] = Point(view.vertices[i].x, view.vertices[i].y);
+	slika->Canvas->Polygon(polygon_points, view.vertices.size() - 1);
+
+}
+
+//---------------------------------------------------------------------------
+
+Vertex get_intersection_point(Vertex l1p1, Vertex l1p2, Vertex l2p1, Vertex l2p2) {
 	double A1 = l1p2.y - l1p1.y;
 	double B1 = l1p1.x - l1p2.x;
 	double C1 = A1 * l1p1.x + B1 * l1p1.y;
@@ -151,28 +203,30 @@ Dot GetIntersectionPoint(Dot l1p1, Dot l1p2, Dot l2p1, Dot l2p2) {
 
     // Lines are parallel
     double det = A1 * B2 - A2 * B1;
-    if (IsEqual(det, 0.0)) {
-		return Dot(0.0, 0.0);  // Parallel lines
+	if (is_equal(det, 0.0)) {
+		return Vertex(0.0, 0.0);  // Parallel lines
 	} else {
 		double x = (B2 * C1 - B1 * C2) / det;
         double y = (A1 * C2 - A2 * C1) / det;
-		bool online1 = ((min(l1p1.x, l1p2.x) < x || IsEqual(min(l1p1.x, l1p2.x), x))
-			&& (max(l1p1.x, l1p2.x) > x || IsEqual(max(l1p1.x, l1p2.x), x))
-			&& (min(l1p1.y, l1p2.y) < y || IsEqual(min(l1p1.y, l1p2.y), y))
-			&& (max(l1p1.y, l1p2.y) > y || IsEqual(max(l1p1.y, l1p2.y), y))
+		bool online1 = ((min(l1p1.x, l1p2.x) < x || is_equal(min(l1p1.x, l1p2.x), x))
+			&& (max(l1p1.x, l1p2.x) > x || is_equal(max(l1p1.x, l1p2.x), x))
+			&& (min(l1p1.y, l1p2.y) < y || is_equal(min(l1p1.y, l1p2.y), y))
+			&& (max(l1p1.y, l1p2.y) > y || is_equal(max(l1p1.y, l1p2.y), y))
 		);
-		bool online2 = ((min(l2p1.x, l2p2.x) < x || IsEqual(min(l2p1.x, l2p2.x), x))
-			&& (max(l2p1.x, l2p2.x) > x || IsEqual(max(l2p1.x, l2p2.x), x))
-			&& (min(l2p1.y, l2p2.y) < y || IsEqual(min(l2p1.y, l2p2.y), y))
-			&& (max(l2p1.y, l2p2.y) > y || IsEqual(max(l2p1.y, l2p2.y), y))
+		bool online2 = ((min(l2p1.x, l2p2.x) < x || is_equal(min(l2p1.x, l2p2.x), x))
+			&& (max(l2p1.x, l2p2.x) > x || is_equal(max(l2p1.x, l2p2.x), x))
+			&& (min(l2p1.y, l2p2.y) < y || is_equal(min(l2p1.y, l2p2.y), y))
+			&& (max(l2p1.y, l2p2.y) > y || is_equal(max(l2p1.y, l2p2.y), y))
 		);
         if (online1 && online2)
-			return Dot(x, y);
+			return Vertex(x, y);
 	}
-	return Dot(0.0, 0.0);  // Intersection is out of at least one segment
+	return Vertex(0.0, 0.0);  // Intersection is out of at least one segment
 }
 
-bool Simple_polygon::IsPointInsidePoly(Dot test)
+//---------------------------------------------------------------------------
+
+bool Simple_polygon::is_point_inside_poly(Vertex test)
 {
 	int i;
 	int j;
@@ -188,41 +242,47 @@ bool Simple_polygon::IsPointInsidePoly(Dot test)
     return result;
 }
 
-vector<Dot> Simple_polygon::GetIntersectionPoints(Dot l1p1, Dot l1p2)
+//---------------------------------------------------------------------------
+
+vector<Vertex> Simple_polygon::get_intersection_points(Vertex l1p1, Vertex l1p2)
 {
-	vector<Dot> intersectionPoints;;
+	vector<Vertex> intersection_points;;
 	for (int i = 0; i < vertices.size(); i++)
 	{
 		int next = (i + 1 == vertices.size()) ? 0 : i + 1;
-		Dot ip = GetIntersectionPoint(l1p1, l1p2, vertices[i], vertices[next]);
-		if (ip.x != 0.0 && ip.y != 0.0) intersectionPoints.push_back(ip);
+		Vertex ip = get_intersection_point(l1p1, l1p2, vertices[i], vertices[next]);
+		if (ip.x != 0.0 && ip.y != 0.0) intersection_points.push_back(ip);
 	}
-	return intersectionPoints;
+	return intersection_points;
 }
 
-void AddPoints(vector<Dot>& pool, vector<Dot> newpoints)
+//---------------------------------------------------------------------------
+
+void add_points(vector<Vertex>& pool, vector<Vertex> new_points)
 {
-	for(int i=0;i<newpoints.size();i++)
+	for(int i=0;i<new_points.size();i++)
 	{
 		bool found = false;
 		for(int j=0;j<pool.size();j++)
 		{
-			if (IsEqual(pool[j].x, newpoints[i].x) && IsEqual(pool[j].y, newpoints[i].y))
+			if (is_equal(pool[j].x, new_points[i].x) && is_equal(pool[j].y, new_points[i].y))
 			{
 				found = true;
 				break;
 			}
 		}
-		if (!found) pool.push_back(newpoints[i]);
+		if (!found) pool.push_back(new_points[i]);
 	}
 }
 
-vector<Dot> OrderClockwise(vector<Dot> points)
+//---------------------------------------------------------------------------
+
+vector<Vertex> order_clockwise(vector<Vertex> points)
 {
 	double mX = 0;
 	double mY = 0;
 
-	for (const Dot p : points) {
+	for (const Vertex p : points) {
 		mX += p.x;
 		mY += p.y;
 	}
@@ -230,7 +290,7 @@ vector<Dot> OrderClockwise(vector<Dot> points)
 	mX /= points.size();
 	mY /= points.size();
 
-	sort(points.begin(), points.end(), [&](const Dot& a, const Dot& b) {
+	sort(points.begin(), points.end(), [&](const Vertex& a, const Vertex& b) {
 		double angleA = std::atan2(a.y - mY, a.x - mX);
 		double angleB = std::atan2(b.y - mY, b.x - mX);
 		return angleA < angleB;
@@ -239,31 +299,33 @@ vector<Dot> OrderClockwise(vector<Dot> points)
 	return points;
 }
 
-vector<Dot> Simple_polygon::GetIntersectionOfPolygons(Simple_polygon &poly2)
+//---------------------------------------------------------------------------
+
+vector<Vertex> Simple_polygon::get_intersection_of_polygons(Simple_polygon &poly2)
 {
-	vector<Dot> clippedCorners;
+	vector<Vertex> clipped_corners;
 	//Add  the corners of poly1 which are inside poly2
 	for (int i = 0; i < vertices.size(); i++)
     {
-		if (poly2.IsPointInsidePoly(vertices[i]))
-			AddPoints(clippedCorners, vector<Dot> { vertices[i] });
+		if (poly2.is_point_inside_poly(vertices[i]))
+			add_points(clipped_corners, vector<Vertex> { vertices[i] });
 	}
     //Add the corners of poly2 which are inside poly1
 	for (int i = 0; i < poly2.vertices.size(); i++)
 	{
-		if (IsPointInsidePoly(poly2.vertices[i]))
-			AddPoints(clippedCorners, vector<Dot>{ poly2.vertices[i]});
+		if (is_point_inside_poly(poly2.vertices[i]))
+			add_points(clipped_corners, vector<Vertex>{ poly2.vertices[i]});
 	}
 	//Add  the intersection points
 	for (int i = 0, next = 1; i < vertices.size(); i++, next = (i + 1 == vertices.size()) ? 0 : i + 1)
 	{
-		if(clippedCorners.size()!=0)
-			AddPoints(clippedCorners, poly2.GetIntersectionPoints(vertices[i], vertices[next]));
+		if(clipped_corners.size()!=0)
+			add_points(clipped_corners, poly2.get_intersection_points(vertices[i], vertices[next]));
 	}
 
-	if(clippedCorners.size()==0) return vector<Dot>();
+	if(clipped_corners.size()==0) return vector<Vertex>();
 
-	return OrderClockwise(clippedCorners);
+	return order_clockwise(clipped_corners);
 }
 
 

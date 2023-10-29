@@ -37,7 +37,7 @@ __published:	// IDE-managed Components
 	void __fastcall CamerasIntersectionClick(TObject *Sender);
 private:	// User declarations
 	Simple_polygon outside_polygon;
-	vector<Simple_polygon> holes{Simple_polygon()};
+	vector<Simple_polygon> holes;
 	vector<Camera> cameras;
 
 

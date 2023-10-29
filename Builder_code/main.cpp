@@ -31,7 +31,7 @@ void __fastcall Tagp_aplication::image_mouse_move(TObject *Sender, TShiftState S
 
 void __fastcall Tagp_aplication::image_mouse_down(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y){
 
-	Dot nova(X, Y);
+	Vertex nova(X, Y);
 	if(radio_draw_polygon->Checked) {
 		outside_polygon.vertices.push_back(nova);
 		int n = outside_polygon.vertices.size();
@@ -43,10 +43,14 @@ void __fastcall Tagp_aplication::image_mouse_down(TObject *Sender, TMouseButton 
 	}
 	else if(radio_draw_hole->Checked){
 		int broj_rupa = holes.size();
+		if(broj_rupa == 0){
+			holes.push_back(Simple_polygon());
+            broj_rupa++;
+		}
 		holes[broj_rupa - 1].vertices.push_back(nova);
 		int n = holes[broj_rupa - 1].vertices.size();
 		if(n > 1){
-           Segment(holes[broj_rupa - 1].vertices[n - 2], nova).draw(image);
+		   Segment(holes[broj_rupa - 1].vertices[n - 2], nova).draw(image);
 		}
 		nova.draw(image);
 	}
@@ -64,7 +68,7 @@ void __fastcall Tagp_aplication::image_mouse_up(TObject *Sender, TMouseButton Bu
 	if(radio_add_camera->Checked){
 		if(start_x == X && start_y == Y)
             return;
-		Dot center(start_x, start_y);
+		Vertex center(start_x, start_y);
 		int direction_x = X - start_x;
 		int direction_y = Y - start_y;
 
@@ -72,11 +76,11 @@ void __fastcall Tagp_aplication::image_mouse_up(TObject *Sender, TMouseButton Bu
 		Camera c(view);
 
 		double alpha = c.RADIUS/sqrt(direction_x*direction_x + direction_y*direction_y);
-		Dot end(start_x + alpha * direction_x, start_y + alpha * direction_y);
+		Vertex end(start_x + alpha * direction_x, start_y + alpha * direction_y);
 
 		c.view.vertices.push_back(center);
 
-		Dot temp = end.rotate(center, c.FILL_ANGLE /2);
+		Vertex temp = end.rotate(center, c.FILL_ANGLE /2);
 		for(int i = 0; i < c.ACCURACY; i++){
             c.view.vertices.push_back(temp);
 			temp = temp.rotate(center, -1 * c.FILL_ANGLE/c.ACCURACY);
@@ -87,8 +91,8 @@ void __fastcall Tagp_aplication::image_mouse_up(TObject *Sender, TMouseButton Bu
 
         //Presjec view sa svim ostalim kamerama i rupama
 
-		c.view.draw(image);
-        c.view.fill_color(image, clYellow);
+		c.draw(image);
+        c.fill_color(image);
 
 		cameras.push_back(c);
 	}
@@ -104,7 +108,7 @@ void __fastcall Tagp_aplication::button_clean_click(TObject *Sender){
 	image->Canvas->Brush->Color = clWhite;
 
 	outside_polygon = Simple_polygon();
-	holes = vector<Simple_polygon>{Simple_polygon()};
+	holes = vector<Simple_polygon>();
 	cameras.clear();
 
 }
@@ -140,33 +144,12 @@ void __fastcall Tagp_aplication::button_finish_object_click(TObject *Sender){
 
 void __fastcall Tagp_aplication::ButtonPolygonAreaClick(TObject *Sender)
 {
-	double sum1 = 0, sum2 = 0;
-	for(int i=0; i<outside_polygon.vertices.size()-1; i++) {
-		sum1 += outside_polygon.vertices[i].x * outside_polygon.vertices[i+1].y;
-		sum2 += outside_polygon.vertices[i].y * outside_polygon.vertices[i+1].x;
-	}
-	sum1 += outside_polygon.vertices[outside_polygon.vertices.size()-1].x
-			* outside_polygon.vertices[0].y;
-	sum2 += outside_polygon.vertices[0].x
-			* outside_polygon.vertices[outside_polygon.vertices.size()-1].y;
-
 	double sum = 0;
 	for (int i=0; i<holes.size(); i++) {
-	   double sum_holes1 = 0, sum_holes2 = 0;
-	   if (holes[i].vertices.size()>0) {
-		for(int j=0; j<holes[i].vertices.size()-1; j++) {
-			sum_holes1 += holes[i].vertices[j].x * holes[i].vertices[j+1].y;
-			sum_holes2 += holes[i].vertices[j].y * holes[i].vertices[j+1].x;
-		}
-        sum_holes1 += holes[i].vertices[holes[i].vertices.size()-1].x
-					* holes[i].vertices[0].y;
-		sum_holes2 += holes[i].vertices[0].x
-					* holes[i].vertices[holes[i].vertices.size()-1].y;
-		sum += abs(sum_holes1 - sum_holes2)/2;
-	   }
+	   sum += holes[i].surface_area();
 	}
 
-	ShowMessage(abs(sum1 - sum2)/2 - sum);
+	ShowMessage(outside_polygon.surface_area() - sum);
 }
 //---------------------------------------------------------------------------
 
@@ -174,21 +157,21 @@ void __fastcall Tagp_aplication::CamerasIntersectionClick(TObject *Sender)
 {
        for(int i=0;i<cameras.size();i++){
 		for(int j=i+1;j<cameras.size();j++){
-			vector<Dot> intersectionPolygon = cameras[i].view.GetIntersectionOfPolygons(cameras[j].view);
+			vector<Vertex> intersectionPolygon = cameras[i].view.get_intersection_of_polygons(cameras[j].view);
 			if(intersectionPolygon.size()!=0){
 				for (int k=0; k < intersectionPolygon.size()-1; k++) {
 					int x1=intersectionPolygon[k].x;
 					int x2=intersectionPolygon[k+1].x;
 					int y1=intersectionPolygon[k].y;
 					int y2=intersectionPolygon[k+1].y;
-					Segment d = Segment(Dot(x1,y1), Dot(x2,y2));
+					Segment d = Segment(Vertex(x1,y1), Vertex(x2,y2));
 					d.draw(image, clRed);
 				}
 				int x1=intersectionPolygon[0].x;
 				int x2=intersectionPolygon[intersectionPolygon.size()-1].x;
 				int y1=intersectionPolygon[0].y;
 				int y2=intersectionPolygon[intersectionPolygon.size()-1].y;
-				Segment d = Segment(Dot(x1,y1), Dot(x2,y2));
+				Segment d = Segment(Vertex(x1,y1), Vertex(x2,y2));
 				d.draw(image, clRed);
 				}
 			}

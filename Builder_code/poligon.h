@@ -12,26 +12,26 @@
 
 using namespace std;
 
-struct Dot {
+struct Vertex {
 	double x, y;
     const int SIZE = 2;
-	Dot(double x = 0, double y = 0): x(x), y(y){}
+	Vertex(double x = 0, double y = 0): x(x), y(y){}
 	void draw(TImage*, TColor color = clRed);
-	Dot& operator=(const Dot &);
-    Dot rotate(Dot, float);
+	Vertex& operator=(const Vertex &);
+    Vertex rotate(Vertex, float);
 };
 
 //---------------------------------------------------------------------------
 
-bool operator<(Dot, Dot);
-bool operator==(Dot, Dot);
-int orientation(Dot, Dot, Dot);
+bool operator<(Vertex, Vertex);
+bool operator==(Vertex, Vertex);
+int orientation(Vertex, Vertex, Vertex);
 
 //---------------------------------------------------------------------------
 
 struct Segment {
-    Dot A,B;
-	Segment(Dot A, Dot B): A(A), B(B) {
+    Vertex A,B;
+	Segment(Vertex A, Vertex B): A(A), B(B) {
 		if (B < A) {
 			swap(this->A, this->B);
 		}
@@ -42,8 +42,8 @@ struct Segment {
 //---------------------------------------------------------------------------
 
 struct Trougao {
-    Dot A, B, C;
-    Trougao(Dot A, Dot B, Dot C): A(A), B(B), C(C) {
+    Vertex A, B, C;
+    Trougao(Vertex A, Vertex B, Vertex C): A(A), B(B), C(C) {
         if (orientation(A, B, C) > 0) {
             swap(B, C);
         }
@@ -54,15 +54,19 @@ struct Trougao {
 //---------------------------------------------------------------------------
 
 class Simple_polygon{
-	vector<Dot> vertices;
+	vector<Vertex> vertices;
 public:
+	Simple_polygon():vertices(){};
+	Simple_polygon(vector<Vertex> v):vertices(v){};
 	void draw(TImage*, TColor color = clBlue);
 	void fill_color(TImage*, TColor boja = clAqua);
-	double surface_area();//Za implementirat
-    bool IsPointInsidePoly(Dot test);
-	vector<Dot> GetIntersectionPoints(Dot l1p1, Dot l1p2);
-	vector<Dot> GetIntersectionOfPolygons(Simple_polygon &poly2);
+	double surface_area();
+	bool is_point_inside_poly(Vertex);
+    bool is_convex();
+	vector<Vertex> get_intersection_points(Vertex, Vertex);
+	vector<Vertex> get_intersection_of_polygons(Simple_polygon&);
 	friend class Tagp_aplication;
+    friend class Camera;
 };
 
 //---------------------------------------------------------------------------
@@ -75,6 +79,7 @@ class Camera{
 public:
 	Camera(Simple_polygon v):view(v){};
 	void draw(TImage*, TColor vertice_color=clGreen, TColor fill_color=clYellow);
+    void fill_color(TImage*, TColor boja = clYellow);
     friend class Tagp_aplication;
 
 };
