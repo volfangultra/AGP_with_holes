@@ -9,7 +9,7 @@
 #include <sstream>
 #include <iostream>
 #include <algorithm>
-#include <windows.h>
+#include <filesystem>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -188,7 +188,7 @@ void __fastcall Tagp_aplication::CamerasIntersectionClick(TObject *Sender)
 
 void __fastcall Tagp_aplication::ButtonDrawCampusClick(TObject *Sender)
 {
-	ifstream inputFileCampus("campus.txt");
+	ifstream inputFileCampus("C:/Users/ACER/Desktop/AGP/Builder_code/campus.txt");
 	if (inputFileCampus.is_open()) {
 		string line;
 		while (getline(inputFileCampus, line)) {
@@ -232,8 +232,9 @@ void __fastcall Tagp_aplication::ButtonDrawCampusClick(TObject *Sender)
 
 		}
 		inputFileCampus.close();
+        holes.pop_back();
+		ShowMessage(holes.size());
 	}
-	ShowMessage(holes.size());
 }
 //---------------------------------------------------------------------------
 
