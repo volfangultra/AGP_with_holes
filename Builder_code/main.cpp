@@ -231,7 +231,7 @@ void __fastcall Tagp_aplication::ButtonDrawCampusClick(TObject *Sender)
 
 
 		}
-		inputFileCampus.close();
+		inputFileHoles.close();
 	}
 }
 //---------------------------------------------------------------------------
