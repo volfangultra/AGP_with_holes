@@ -18,7 +18,8 @@ struct Vertex {
 	Vertex(double x = 0, double y = 0): x(x), y(y){}
 	void draw(TImage*, TColor color = clRed);
 	Vertex& operator=(const Vertex &);
-    Vertex rotate(Vertex, float);
+	Vertex rotate(Vertex, float);
+    double distance_to(Vertex&);
 };
 
 //---------------------------------------------------------------------------
@@ -30,7 +31,8 @@ int orientation(Vertex, Vertex, Vertex);
 //---------------------------------------------------------------------------
 
 struct Segment {
-    Vertex A,B;
+	Vertex A,B;
+    Segment():A(), B() {};
 	Segment(Vertex A, Vertex B): A(A), B(B) {
 		if (B < A) {
 			swap(this->A, this->B);
@@ -65,6 +67,7 @@ public:
     bool is_convex();
 	vector<Vertex> get_intersection_points(Vertex, Vertex);
 	vector<Vertex> get_intersection_of_polygons(Simple_polygon&);
+    friend void intersect(Simple_polygon&, Simple_polygon&);
 	friend class Tagp_aplication;
     friend class Camera;
 };
@@ -74,12 +77,13 @@ public:
 class Camera{
     Simple_polygon view;
 	const float FILL_ANGLE = 1;
-	const int RADIUS = 50;
-	const int ACCURACY = 4;
+	const int RADIUS = 150;
+	const int ACCURACY = 100;
 public:
 	Camera(Simple_polygon v):view(v){};
 	void draw(TImage*, TColor vertice_color=clGreen, TColor fill_color=clYellow);
-    void fill_color(TImage*, TColor boja = clYellow);
+	void fill_color(TImage*, TColor boja = clYellow);
+    void hit(Simple_polygon&);
     friend class Tagp_aplication;
 
 };

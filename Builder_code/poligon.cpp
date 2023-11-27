@@ -4,6 +4,7 @@
 
 #include "poligon.h"
 #include <algorithm>
+#include <string>
 
 //---------------------------------------------------------------------------
 
@@ -53,6 +54,10 @@ Vertex Vertex::rotate(Vertex center, float angle){
 	result.y = (x - center.x) * sin(angle) + (y - center.y) * cos(angle) + center.y;
 
 	return result;
+}
+
+double Vertex::distance_to(Vertex& point){
+	return (x - point.x)*(x - point.x)+ (y - point.y)*(y - point.y);
 }
 
 
@@ -170,7 +175,7 @@ bool Simple_polygon::is_convex(){
 }
 
 void Camera::draw(TImage* slika, TColor vertex_color, TColor segment_color){
-	slika->Canvas->Pen->Color = segment_color;
+	slika->Canvas->Pen->Color = clYellow;
 	slika->Canvas->MoveTo(view.vertices[0].x, view.vertices[0].y);
 	for(int i=1; i<view.vertices.size(); i++) {
 		slika->Canvas->LineTo(view.vertices[i].x, view.vertices[i].y);
@@ -183,11 +188,7 @@ void Camera::draw(TImage* slika, TColor vertex_color, TColor segment_color){
 //---------------------------------------------------------------------------
 
 void Camera::fill_color(TImage* slika, TColor color){
-	slika->Canvas->Brush->Color = color;
-	TPoint polygon_points[view.vertices.size()];
-	for(int i = 0; i < view.vertices.size(); i++)
-		polygon_points[i] = Point(view.vertices[i].x, view.vertices[i].y);
-	slika->Canvas->Polygon(polygon_points, view.vertices.size() - 1);
+
 
 }
 
@@ -237,9 +238,9 @@ bool Simple_polygon::is_point_inside_poly(Vertex test)
 			(test.x < (vertices[j].x - vertices[i].x) * (test.y - vertices[i].y) / (vertices[j].y - vertices[i].y) + vertices[i].x))
 		{
 			result = !result;
-        }
-    }
-    return result;
+		}
+	}
+	return result;
 }
 
 //---------------------------------------------------------------------------
@@ -327,6 +328,32 @@ vector<Vertex> Simple_polygon::get_intersection_of_polygons(Simple_polygon &poly
 
 	return order_clockwise(clipped_corners);
 }
+
+//---------------------------------------------------------------------------
+
+void Camera::hit(Simple_polygon& poly){
+	if(poly.vertices.size() == 0)
+		return;
+
+	for(int i = 1; i < view.vertices.size(); i++){
+		Segment ray = Segment(view.vertices[0], view.vertices[i]);
+		for(int j = 0; j < poly.vertices.size(); j++){
+			Segment temp = Segment(poly.vertices[j], poly.vertices[(j + 1)%poly.vertices.size()]);
+			if(do_segments_intersect(ray, temp)){
+				Vertex intersection = line_intersection(ray, temp);
+				if(view.vertices[0].distance_to(intersection) < view.vertices[0].distance_to(view.vertices[i]))
+                    view.vertices[i] = intersection;
+
+			};
+
+		}
+
+	}
+}
+
+//---------------------------------------------------------------------------
+
+
 
 
 #pragma package(smart_init)

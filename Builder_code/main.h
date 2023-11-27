@@ -29,6 +29,8 @@ __published:	// IDE-managed Components
 	TButton *ButtonPolygonArea;
 	TButton *Button1;
 	TButton *Button2;
+	TEdit *text_num_cameras;
+	TLabel *label_num_cameras;
 	void __fastcall image_mouse_down(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall image_mouse_up(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall image_mouse_move(TObject *Sender, TShiftState Shift, int X, int Y);

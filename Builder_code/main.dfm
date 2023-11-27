@@ -10,6 +10,8 @@ object agp_aplication: Tagp_aplication
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
+  PixelsPerInch = 96
   TextHeight = 13
   object image: TImage
     Left = 8
@@ -39,6 +41,19 @@ object agp_aplication: Tagp_aplication
     Width = 123
     Height = 16
     Caption = 'Surface area covered'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  object label_num_cameras: TLabel
+    Left = 263
+    Top = 633
+    Width = 115
+    Height = 16
+    Caption = 'Number of Cameras'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -13
@@ -143,5 +158,12 @@ object agp_aplication: Tagp_aplication
     Caption = 'Draw Campus'
     TabOrder = 11
     OnClick = ButtonDrawCampusClick
+  end
+  object text_num_cameras: TEdit
+    Left = 384
+    Top = 631
+    Width = 41
+    Height = 21
+    TabOrder = 12
   end
 end

@@ -16,7 +16,34 @@
 Tagp_aplication *agp_aplication;
 int start_x, start_y;
 using namespace std;
+
 //---------------------------------------------------------------------------
+
+double covered_surface_area(TImage* image, Simple_polygon& poly, vector<Simple_polygon>& holes){
+	int covered_area = 0;
+	double blue_area = poly.surface_area();
+	for(auto hole:holes)
+		blue_area -= hole.surface_area();
+
+	for (int y = 0; y < image->Height; y++) {
+        for (int x = 0; x < image->Width; x++) {
+			TColor pixelColor = image->Canvas->Pixels[x][y];
+			if (pixelColor == clYellow) {
+				covered_area += 1;
+			}
+			if(pixelColor == clAqua){
+				blue_area += 1;
+			}
+		}
+	}
+	if(blue_area == 0)
+		return 0;
+
+	return covered_area / blue_area;
+}
+
+//---------------------------------------------------------------------------
+
 __fastcall Tagp_aplication::Tagp_aplication(TComponent* Owner): TForm(Owner){
 	image->Canvas->Brush->Color = clWhite;
 	image->Canvas->FillRect(Rect(0, 0, image->Width, image->Height));
@@ -63,7 +90,7 @@ void __fastcall Tagp_aplication::image_mouse_down(TObject *Sender, TMouseButton 
 	else if(radio_add_camera->Checked){
 		start_x = X;
 		start_y = Y;
-		nova.draw(image, clGreen);
+		text_num_cameras->Text = to_string(cameras.size() + 1).c_str();
 	}
 }
 
@@ -95,11 +122,12 @@ void __fastcall Tagp_aplication::image_mouse_up(TObject *Sender, TMouseButton Bu
 
 		c.view.vertices.push_back(temp);
 
-        //Presjec view sa svim ostalim kamerama i rupama
-
-		c.draw(image);
-        c.fill_color(image);
-
+		//Presjec view sa svim ostalim kamerama i rupama
+		for(auto rupe:holes)
+			c.hit(rupe);
+		c.hit(outside_polygon);
+		c.fill_color(image);
+		c.draw(image, clYellow, clYellow);
 		cameras.push_back(c);
 	}
 }
@@ -150,12 +178,12 @@ void __fastcall Tagp_aplication::button_finish_object_click(TObject *Sender){
 
 void __fastcall Tagp_aplication::ButtonPolygonAreaClick(TObject *Sender)
 {
-	double sum = 0;
-	for (int i=0; i<holes.size(); i++) {
-	   sum += holes[i].surface_area();
-	}
 
-	ShowMessage(outside_polygon.surface_area() - sum);
+	double area_covered = covered_surface_area(image, outside_polygon, holes);
+	UnicodeString rez = FormatFloat("#00.00", (area_covered * 100));
+
+	text_surface_area_covered->Text = rez + "%";
+
 }
 //---------------------------------------------------------------------------
 
@@ -188,7 +216,7 @@ void __fastcall Tagp_aplication::CamerasIntersectionClick(TObject *Sender)
 
 void __fastcall Tagp_aplication::ButtonDrawCampusClick(TObject *Sender)
 {
-	ifstream inputFileCampus("C:/Users/ACER/Desktop/AGP/Builder_code/campus.txt");
+	ifstream inputFileCampus("C:/Users/eminm/OneDrive/Desktop/Projects/Adis Projekti/AGP_with_holes/Builder_code/campus.txt");
 	if (inputFileCampus.is_open()) {
 		string line;
 		while (getline(inputFileCampus, line)) {
@@ -205,7 +233,7 @@ void __fastcall Tagp_aplication::ButtonDrawCampusClick(TObject *Sender)
 		inputFileCampus.close();
 	}
 
-	ifstream inputFileHoles("C:/Users/ACER/Desktop/AGP/Builder_code/holes.txt");
+	ifstream inputFileHoles("C:/Users/eminm/OneDrive/Desktop/Projects/Adis Projekti/AGP_with_holes/Builder_code/holes.txt");
 	if (inputFileHoles.is_open()) {
 		string line;
 		int broj_rupa(holes.size());
