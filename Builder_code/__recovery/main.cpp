@@ -267,11 +267,12 @@ void __fastcall Tagp_aplication::ButtonTriangulationClick(TObject *Sender)
 
 void __fastcall Tagp_aplication::TriangulationButtonClick(TObject *Sender)
 {
-   vector<vector<Vertex>> triangles = outside_polygon.earClipping();
+   vector<vector<Vertex>> triangles = holes[0].earClipping();
+   ShowMessage(triangles.size());
    for(int i=0;i<triangles.size();i++){
-		for(int j=0;j<triangles[i].size();j++){
-			Segment(triangles[i][j], triangles[i][j]).draw(image);
-		}
+		Segment(triangles[i][0], triangles[i][1]).draw(image);
+		Segment(triangles[i][1], triangles[i][2]).draw(image);
+		Segment(triangles[i][2], triangles[i][0]).draw(image);
 		//Simple_polygon sp(triangles[i]);
 		//sp.draw(slika, clRed);
 	}

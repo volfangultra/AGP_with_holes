@@ -351,54 +351,146 @@ void Camera::hit(Simple_polygon& poly){
 	}
 }
 
-bool isPointInsideTriangle(const Vertex& p, const Vertex& a, const Vertex& b, const Vertex& c) {
+
+bool isPointInsideTriangle(const Vertex p, const Vertex a, const Vertex b, const Vertex c) {
 	double areaABC = 0.5 * ((b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y));
 	double areaPBC = 0.5 * ((b.x - p.x) * (c.y - p.y) - (c.x - p.x) * (b.y - p.y));
 	double areaPCA = 0.5 * ((c.x - p.x) * (a.y - p.y) - (a.x - p.x) * (c.y - p.y));
 	double areaPAB = 0.5 * ((a.x - p.x) * (b.y - p.y) - (b.x - p.x) * (a.y - p.y));
-
 	return (areaABC == areaPBC + areaPCA + areaPAB);
 }
 
-// Ear clipping triangulation algorithm
-vector<vector<Vertex>> Simple_polygon::earClipping() {
-	Simple_polygon remainingPolygon = *this;
+/*vector<vector<Vertex>> Simple_polygon:: earClipping() {
 	vector<vector<Vertex>> triangles;
+	vector<int> ears;
+	int n = vertices.size();
 
-	while (remainingPolygon.vertices.size() > 2) {
-        size_t n = remainingPolygon.vertices.size();
-        for (size_t i = 0; i < n; ++i) {
-			const Vertex& a = remainingPolygon.vertices[i];
-			const Vertex& b = remainingPolygon.vertices[(i + 1) % n];
-			const Vertex& c = remainingPolygon.vertices[(i + 2) % n];
+for (int i = 0; i < n; ++i) {
+        int j = (i + 1) % n;
+        int k = (i + 2) % n;
+		if (isEar(vertices, i, j, k)) {
+			ears.push_back(j);
+        }
+	}
+	while (!ears.empty()) {
+		int earIndex = ears.back();
+        ears.pop_back();
 
-            if (isPointInsideTriangle(b, a, c, remainingPolygon.vertices[(i + 3) % n])) {
-                bool isEar = true;
-                for (size_t j = 0; j < n; ++j) {
-                    if (j != i && j != (i + 1) % n && j != (i + 2) % n) {
-						const Vertex& testPoint = remainingPolygon.vertices[j];
-                        if (isPointInsideTriangle(testPoint, a, b, c)) {
-                            isEar = false;
-                            break;
-                        }
-                    }
-                }
+        int i = (earIndex - 1 + n) % n;
+        int j = earIndex;
+        int k = (earIndex + 1) % n;
 
-                if (isEar) {
-                    triangles.push_back({a, b, c});
-					remainingPolygon.vertices.erase(remainingPolygon.vertices.begin() + (i + 1) % n);
-                    break;
-                }
-            }
+        // Add the triangle (i, j, k) to the list
+		triangles.push_back({vertices[i], vertices[j], vertices[k]});
+
+        // Remove vertex j from the polygon and update ears list
+		vertices.erase(vertices.begin() + j);
+        n--;
+
+		// Update the ears list after removing vertex j
+        int prevIndex = (i - 1 + n) % n;
+        int nextIndex = (i + 1) % n;
+		if (isEar(vertices, prevIndex, i, nextIndex)) {
+            ears.push_back(i);
+		}
+		if (isEar(vertices, prevIndex, nextIndex, nextIndex + 1)) {
+            ears.push_back(nextIndex);
         }
     }
 
-	triangles.push_back(remainingPolygon.vertices);
-	for(int i=0;i<triangles.size();i++){
-		Simple_polygon sp(triangles[i]);
-		sp.draw(slika, clRed);
-	}
+    // Add the last triangle to the list
+	triangles.push_back(vertices);
 	return triangles;
+}*/
+
+bool isEar(int i, vector<Vertex> &vertices) {
+		int n = vertices.size();
+
+		Vertex prev = vertices[(i - 1 + n) % n];
+		Vertex current = vertices[i];
+		Vertex next = vertices[(i + 1) % n];
+
+            for (int j = 0; j < n; ++j) {
+				if (j != i && j != (i - 1 + n) % n && j != (i + 1) % n) {
+					Vertex p = vertices[j];
+                    if (isPointInsideTriangle(prev, current, next, p)) {
+						return false;
+					}
+                }
+            }
+			return true;
+}
+
+// Ear clipping triangulation algorithm
+/*vector<vector<Vertex>> Simple_polygon::earClipping() {
+	Simple_polygon remainingPolygon = *this;
+	vector<vector<Vertex>> triangles;
+	while (remainingPolygon.vertices.size() > 2) {
+
+		size_t n = remainingPolygon.vertices.size();
+		for (size_t i = 0; i < n; ++i) {
+			const Vertex& a = remainingPolygon.vertices[i];
+			const Vertex& b = remainingPolygon.vertices[(i + 1) % n];
+			const Vertex& c = remainingPolygon.vertices[(i + 2) % n];
+			if (is_a_Vertex_in_triangle(b, Trougao(a, c, remainingPolygon.vertices[(i + 3) % n]))) {
+				bool isEar = true;
+				for (size_t j = 0; j < n; ++j) {
+					if (j != i && j != (i + 1) % n && j != (i + 2) % n) {
+						const Vertex& testPoint = remainingPolygon.vertices[j];
+						if (is_a_Vertex_in_triangle(testPoint, Trougao(a, b, c))) {
+							isEar = false;
+							break;
+						}
+					}
+				}
+				if (isEar) {
+					triangles.push_back({a, b, c});
+					remainingPolygon.vertices.erase(remainingPolygon.vertices.begin() + (i + 1) % n);
+					break;
+				}
+            }
+		}
+    }
+	triangles.push_back(remainingPolygon.vertices);
+	return triangles;
+}*/
+
+
+int findEar(vector<Vertex> &vertices) {
+		int n = vertices.size();
+
+        for (int i = 0; i < n; ++i) {
+			if (isEar(i, vertices)) {
+                return i;
+            }
+        }
+
+        // If no ear is found, return an arbitrary vertex
+        return 1;
+	}
+
+bool isPointInsideTriangle(const Vertex& a, const Vertex& b, const Vertex& c, const Vertex& p) {
+        double detT = (b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y);
+        double alpha = ((b.y - c.y) * (p.x - c.x) + (c.x - b.x) * (p.y - c.y)) / detT;
+        double beta = ((c.y - a.y) * (p.x - c.x) + (a.x - c.x) * (p.y - c.y)) / detT;
+        double gamma = 1.0 - alpha - beta;
+
+        return alpha >= 0 && beta >= 0 && gamma >= 0;
+	}
+
+
+vector<vector<Vertex>> Simple_polygon :: earClipping() {
+		vector<vector<Vertex>> triangles;
+
+        while (vertices.size() > 3) {
+			int earIndex = findEar(vertices);
+            triangles.push_back({vertices[earIndex - 1], vertices[earIndex], vertices[earIndex + 1]});
+			vertices.erase(vertices.begin() + earIndex);
+        }
+
+        // Last triangle
+		triangles.push_back(vertices);
+		return triangles;
 }
 
 //---------------------------------------------------------------------------
