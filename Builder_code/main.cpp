@@ -10,6 +10,7 @@
 #include <iostream>
 #include <algorithm>
 #include <filesystem>
+#include "CDT.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -264,4 +265,71 @@ void __fastcall Tagp_aplication::ButtonDrawCampusClick(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+
+
+
+
+void __fastcall Tagp_aplication::ButtonDelaunayTriangulationClick(TObject *Sender)
+
+{
+	CDT::Triangulation<double> cdt;
+	vector<Vertex> all_vertices = outside_polygon.vertices;
+	for(auto hole:holes)
+		for(auto vertex:hole.vertices)
+			all_vertices.push_back(vertex);
+
+	cdt.insertVertices(
+		all_vertices.begin(),
+		all_vertices.end(),
+		[](const Vertex& p){ return p.x; },
+		[](const Vertex& p){ return p.y; }
+	);
+
+	vector<pair<int,int>> segments;
+	int n = outside_polygon.vertices.size();
+	int brojac = 0;
+	for(int i = 0; i < n; i++){
+		segments.push_back({i, (i+1)%n});
+		brojac++;
+	}
+
+	for(int i = 0; i < holes.size() - 1; i++){
+		for(int j = 0; j < holes[i].vertices.size() - 1; j++){
+			segments.push_back({brojac, brojac + 1});
+			brojac++;
+		}
+		segments.push_back({brojac - holes[i].vertices.size() + 1 , brojac});
+		brojac++;
+	}
+
+	for(int i = 0; i < segments.size(); i++)
+		Segment temp = Segment(all_vertices[segments[i].first],all_vertices[segments[i].second]);
+
+
+    cdt.insertEdges(
+		segments.begin(),
+		segments.end(),
+		[](const pair<int, int>& e){ return e.first; },
+		[](const pair<int, int>& e){ return e.second; }
+	);
+
+	cdt.eraseOuterTrianglesAndHoles();
+
+	unordered_set<CDT::Edge> triangle_segments = CDT::extractEdgesFromTriangles(cdt.triangles);
+
+	vector<CDT::Triangle> triangles = cdt.triangles;
+	for(auto triangle : triangles){
+		auto A = triangle.vertices[0];
+		auto B = triangle.vertices[1];
+		auto C = triangle.vertices[2];
+		delaunay_triangles.push_back(Triangle(all_vertices[A], all_vertices[B], all_vertices[C]));
+
+	}
+
+	for(auto triangle: delaunay_triangles){
+		triangle.draw(image);
+	}
+
+}
+//---------------------------------------------------------------------------
 

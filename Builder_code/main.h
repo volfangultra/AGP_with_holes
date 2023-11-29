@@ -31,6 +31,7 @@ __published:	// IDE-managed Components
 	TButton *Button2;
 	TEdit *text_num_cameras;
 	TLabel *label_num_cameras;
+	TButton *ButtonDelaunayTriangulation;
 	void __fastcall image_mouse_down(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall image_mouse_up(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall image_mouse_move(TObject *Sender, TShiftState Shift, int X, int Y);
@@ -39,10 +40,12 @@ __published:	// IDE-managed Components
 	void __fastcall ButtonPolygonAreaClick(TObject *Sender);
 	void __fastcall CamerasIntersectionClick(TObject *Sender);
 	void __fastcall ButtonDrawCampusClick(TObject *Sender);
+	void __fastcall ButtonDelaunayTriangulationClick(TObject *Sender);
 private:	// User declarations
 	Simple_polygon outside_polygon;
 	vector<Simple_polygon> holes;
 	vector<Camera> cameras;
+    vector<Triangle> delaunay_triangles;
 
 
 public:		// User declarations

@@ -166,4 +166,13 @@ object agp_aplication: Tagp_aplication
     Height = 21
     TabOrder = 12
   end
+  object ButtonDelaunayTriangulation: TButton
+    Left = 776
+    Top = 275
+    Width = 163
+    Height = 25
+    Caption = 'Delone trianguliraj'
+    TabOrder = 13
+    OnClick = ButtonDelaunayTriangulationClick
+  end
 end

@@ -43,13 +43,14 @@ struct Segment {
 
 //---------------------------------------------------------------------------
 
-struct Trougao {
+struct Triangle {
     Vertex A, B, C;
-    Trougao(Vertex A, Vertex B, Vertex C): A(A), B(B), C(C) {
+    Triangle(Vertex A, Vertex B, Vertex C): A(A), B(B), C(C) {
         if (orientation(A, B, C) > 0) {
             swap(B, C);
         }
-    }
+	}
+	void draw(TImage*, TColor line_color=clBlue);
 
 };
 

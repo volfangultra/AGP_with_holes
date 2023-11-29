@@ -115,7 +115,7 @@ Vertex line_intersection(Segment d1, Segment d2) {
 
 //---------------------------------------------------------------------------
 
-bool is_a_Vertex_in_triangle(Vertex T, Trougao tr) {
+bool is_a_Vertex_in_triangle(Vertex T, Triangle tr) {
 	int o1 = orientation(tr.A, tr.B, T);
 	int o2 = orientation(tr.B, tr.C, T);
 	int o3 = orientation(tr.C, tr.A, T);
@@ -188,8 +188,11 @@ void Camera::draw(TImage* slika, TColor vertex_color, TColor segment_color){
 //---------------------------------------------------------------------------
 
 void Camera::fill_color(TImage* slika, TColor color){
-
-
+	slika->Canvas->Brush->Color = color;
+	TPoint polygon_points[view.vertices.size()];
+	for(int i = 0; i < view.vertices.size(); i++)
+		polygon_points[i] = Point(view.vertices[i].x, view.vertices[i].y);
+	slika->Canvas->Polygon(polygon_points, view.vertices.size() - 1);
 }
 
 //---------------------------------------------------------------------------
@@ -353,6 +356,12 @@ void Camera::hit(Simple_polygon& poly){
 
 //---------------------------------------------------------------------------
 
+void Triangle::draw(TImage* image, TColor line_color){
+	Segment(A,B).draw(image, line_color);
+	Segment(A,C).draw(image, line_color);
+    Segment(B,C).draw(image, line_color);
+
+}
 
 
 
