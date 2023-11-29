@@ -26,6 +26,7 @@ struct Vertex {
 
 bool operator<(Vertex, Vertex);
 bool operator==(Vertex, Vertex);
+bool operator!=(Vertex, Vertex);
 int orientation(Vertex, Vertex, Vertex);
 
 //---------------------------------------------------------------------------
@@ -52,6 +53,9 @@ struct Trougao {
 	}
 
 };
+
+bool is_a_Vertex_in_triangle(Vertex, Trougao);
+bool do_segments_intersect(Segment, Segment);
 
 //---------------------------------------------------------------------------
 

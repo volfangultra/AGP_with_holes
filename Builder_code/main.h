@@ -39,12 +39,13 @@ __published:	// IDE-managed Components
 	void __fastcall button_finish_object_click(TObject *Sender);
 	void __fastcall ButtonPolygonAreaClick(TObject *Sender);
 	void __fastcall CamerasIntersectionClick(TObject *Sender);
-	void __fastcall ButtonTriangulationClick(TObject *Sender);
+	void __fastcall ButtonDrawCampusClick(TObject *Sender);
 	void __fastcall TriangulationButtonClick(TObject *Sender);
 private:	// User declarations
 	Simple_polygon outside_polygon;
 	vector<Simple_polygon> holes;
 	vector<Camera> cameras;
+	vector<Segment> segmenti_rupa;
 
 
 public:		// User declarations

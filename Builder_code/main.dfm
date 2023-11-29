@@ -155,7 +155,7 @@ object agp_aplication: Tagp_aplication
     Height = 25
     Caption = 'Draw Campus'
     TabOrder = 11
-    OnClick = ButtonTriangulationClick
+    OnClick = ButtonDrawCampusClick
   end
   object text_num_cameras: TEdit
     Left = 384
