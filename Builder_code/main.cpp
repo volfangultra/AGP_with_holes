@@ -11,6 +11,8 @@
 #include <algorithm>
 #include <filesystem>
 #include "CDT.h"
+#include <unordered_map>
+#include <set>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -116,7 +118,7 @@ void __fastcall Tagp_aplication::image_mouse_up(TObject *Sender, TMouseButton Bu
 
 		Vertex temp = end.rotate(center, c.FILL_ANGLE /2);
 		for(int i = 0; i < c.ACCURACY; i++){
-            c.view.vertices.push_back(temp);
+			c.view.vertices.push_back(temp);
 			temp = temp.rotate(center, -1 * c.FILL_ANGLE/c.ACCURACY);
 
 		}
@@ -217,7 +219,7 @@ void __fastcall Tagp_aplication::CamerasIntersectionClick(TObject *Sender)
 
 void __fastcall Tagp_aplication::ButtonDrawCampusClick(TObject *Sender)
 {
-	ifstream inputFileCampus("C:/Users/eminm/OneDrive/Desktop/Projects/Adis Projekti/AGP_with_holes/Builder_code/campus.txt");
+	ifstream inputFileCampus("C:/Users/nedim/Desktop/AGP_triang/AGP_with_holes/Builder_code/campus.txt");
 	if (inputFileCampus.is_open()) {
 		string line;
 		while (getline(inputFileCampus, line)) {
@@ -234,7 +236,7 @@ void __fastcall Tagp_aplication::ButtonDrawCampusClick(TObject *Sender)
 		inputFileCampus.close();
 	}
 
-	ifstream inputFileHoles("C:/Users/eminm/OneDrive/Desktop/Projects/Adis Projekti/AGP_with_holes/Builder_code/holes.txt");
+	ifstream inputFileHoles("C:/Users/nedim/Desktop/AGP_triang/AGP_with_holes/Builder_code/holes.txt");
 	if (inputFileHoles.is_open()) {
 		string line;
 		int broj_rupa(holes.size());
@@ -322,14 +324,115 @@ void __fastcall Tagp_aplication::ButtonDelaunayTriangulationClick(TObject *Sende
 		auto A = triangle.vertices[0];
 		auto B = triangle.vertices[1];
 		auto C = triangle.vertices[2];
-		delaunay_triangles.push_back(Triangle(all_vertices[A], all_vertices[B], all_vertices[C]));
+		delaunay_triangles.push_back({all_vertices[A], all_vertices[B], all_vertices[C]});
 
 	}
 
 	for(auto triangle: delaunay_triangles){
-		triangle.draw(image);
+		//triangle.draw(image);
+		Segment(triangle[0], triangle[1]).draw(image);
+		Segment(triangle[1], triangle[2]).draw(image);
+		Segment(triangle[2], triangle[0]).draw(image);
+	}
+	unordered_map<Vertex, int> vertexColors;
+
+	for (auto trougao : delaunay_triangles) {
+		// Color the first vertex of the triangle with color 0
+		//if (vertexColors.find(trougao[0]) == vertexColors.end()) {
+		//	vertexColors[trougao[0]] = 1;
+		//}
+
+		// Check the other two vertices of the triangle
+		for (int i = 0; i < 3; ++i) {
+			Vertex vertex = trougao[i];
+
+			// If the vertex is not colored, color it with a color different from its neighbors
+			if (vertexColors.find(vertex) == vertexColors.end()) {
+				set<int> neighborColors;
+				for (Vertex neighbor : trougao) {
+					if (neighbor != vertex  && vertexColors.find(neighbor) != vertexColors.end()) {
+						neighborColors.insert(vertexColors[neighbor]);
+					}
+				}
+
+				// Assign the first available color not used by neighbors
+				for (int color = 0; color < 3; ++color) {
+					if (neighborColors.find(color) == neighborColors.end()) {
+					vertexColors[vertex] = color;
+						break;
+					}
+				}
+			}
+		}
+	}
+	int crveni=0,zuti=0,zeleni=0;
+	for (auto trougao : delaunay_triangles){
+		for (int i = 0; i < 3; ++i){
+			if(vertexColors[trougao[i]] == 0){
+			   trougao[i].draw(image,clRed);
+			   crveni++;
+			}
+			else if(vertexColors[trougao[i]] == 1){
+			   trougao[i].draw(image,clYellow);
+			   zuti++;
+			}
+			else{
+			   trougao[i].draw(image,clGreen);
+			   zeleni++;
+			 }
+		}
 	}
 
-}
+	for (auto trougao : delaunay_triangles){
+		Vertex center;
+        int direction_x;
+		int direction_y;
+		for (int i = 0; i < 3; ++i){
+			if(vertexColors[trougao[i]] == 1){
+			   center.x = trougao[i].x;
+			   center.y = trougao[i].y;
+				if(i==0){
+				  direction_x = (trougao[1].x + trougao[2].x)/2;
+				  direction_y = (trougao[1].y + trougao[2].y)/2;
+				}
+				else if(i==1){
+				  direction_x = (trougao[0].x + trougao[2].x)/2;
+				  direction_y = (trougao[0].y + trougao[2].y)/2;
+				}
+				else{
+				  direction_x = (trougao[0].x + trougao[1].x)/2;
+				  direction_y = (trougao[0].y + trougao[1].y)/2;
+				}
+			}
+		}
+
+
+
+		Simple_polygon view;
+		Camera c(view);
+
+		double alpha = c.RADIUS/sqrt(direction_x*direction_x + direction_y*direction_y);
+		Vertex end(start_x + alpha * direction_x, start_y + alpha * direction_y);
+
+		c.view.vertices.push_back(center);
+
+		Vertex temp = end.rotate(center, c.FILL_ANGLE /2);
+		for(int i = 0; i < c.ACCURACY; i++){
+			c.view.vertices.push_back(temp);
+			temp = temp.rotate(center, -1 * c.FILL_ANGLE/c.ACCURACY);
+
+		}
+
+		c.view.vertices.push_back(temp);
+
+		//Presjec view sa svim ostalim kamerama i rupama
+		for(auto rupe:holes)
+			c.hit(rupe);
+		c.hit(outside_polygon);
+		c.fill_color(image);
+		c.draw(image, clYellow, clYellow);
+		cameras.push_back(c);
+			}
+		}
 //---------------------------------------------------------------------------
 

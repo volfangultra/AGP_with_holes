@@ -10,8 +10,6 @@ object agp_aplication: Tagp_aplication
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = True
-  PixelsPerInch = 96
   TextHeight = 13
   object image: TImage
     Left = 8

@@ -45,7 +45,7 @@ private:	// User declarations
 	Simple_polygon outside_polygon;
 	vector<Simple_polygon> holes;
 	vector<Camera> cameras;
-    vector<Triangle> delaunay_triangles;
+	vector<vector<Vertex>> delaunay_triangles;
 
 
 public:		// User declarations

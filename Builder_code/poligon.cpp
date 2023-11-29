@@ -29,6 +29,10 @@ bool operator==(Vertex A, Vertex B) {
 	return A.x == B.x && A.y == B.y;
 }
 
+bool operator!=(Vertex A, Vertex B) {
+	return A.x != B.x || A.y != B.y;
+}
+
 //---------------------------------------------------------------------------
 
 void Vertex::draw(TImage* slika, TColor color) {

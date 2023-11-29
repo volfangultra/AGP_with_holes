@@ -26,6 +26,7 @@ struct Vertex {
 
 bool operator<(Vertex, Vertex);
 bool operator==(Vertex, Vertex);
+bool operator!=(Vertex, Vertex);
 int orientation(Vertex, Vertex, Vertex);
 
 //---------------------------------------------------------------------------
