@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2023/10/19 16:53:11.000.908,=C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>2023/10/19 16:53:12.000.107,=C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>2023/10/19 16:55:33.000.561,=C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>2023/10/19 16:55:33.000.751,=C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>2023/10/19 16:55:56.000.850,G:\My Drive\Trenutno\AGP on polygons with holes\Kod\Unit1.h=C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\Unit1.h</Transaction>
+    <Transaction>2023/10/19 16:55:56.000.850,G:\My Drive\Trenutno\AGP on polygons with holes\Kod\Unit1.cpp=C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>2023/10/19 16:55:56.000.850,G:\My Drive\Trenutno\AGP on polygons with holes\Kod\Unit1.dfm=C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2023/10/19 17:22:49.000.257,G:\My Drive\Trenutno\AGP on polygons with holes\Kod\AGP_with_holes.cpp=G:\My Drive\Trenutno\AGP on polygons with holes\Kod\Unit1.cpp</Transaction>
+    <Transaction>2023/10/19 17:22:49.000.257,G:\My Drive\Trenutno\AGP on polygons with holes\Kod\AGP_with_holes.dfm=G:\My Drive\Trenutno\AGP on polygons with holes\Kod\Unit1.dfm</Transaction>
+    <Transaction>2023/10/19 17:22:49.000.257,G:\My Drive\Trenutno\AGP on polygons with holes\Kod\AGP_with_holes.h=G:\My Drive\Trenutno\AGP on polygons with holes\Kod\Unit1.h</Transaction>
+    <Transaction>2023/10/19 17:28:56.000.056,=C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>2023/10/19 17:29:46.000.340,C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\poligon.cpp=C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>2023/10/19 17:29:46.000.340,C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\poligon.h=C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\Unit1.h</Transaction>
+    <Transaction>2023/10/19 17:29:57.000.293,C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\project.cbproj=C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\Project1.cbproj</Transaction>
+    <Transaction>2023/10/19 17:29:57.000.288,C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\projectPCH1.h=C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>2023/10/19 17:30:16.000.073,G:\My Drive\Trenutno\AGP on polygons with holes\Kod\main.dfm=G:\My Drive\Trenutno\AGP on polygons with holes\Kod\AGP_with_holes.dfm</Transaction>
+    <Transaction>2023/10/19 17:30:16.000.073,G:\My Drive\Trenutno\AGP on polygons with holes\Kod\main.cpp=G:\My Drive\Trenutno\AGP on polygons with holes\Kod\AGP_with_holes.cpp</Transaction>
+    <Transaction>2023/10/19 17:30:16.000.073,G:\My Drive\Trenutno\AGP on polygons with holes\Kod\main.h=G:\My Drive\Trenutno\AGP on polygons with holes\Kod\AGP_with_holes.h</Transaction>
+    <Transaction>2023/10/19 17:30:37.000.516,G:\My Drive\Trenutno\AGP on polygons with holes\Kod\poligon.h=C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\poligon.h</Transaction>
+    <Transaction>2023/10/19 17:30:37.000.516,G:\My Drive\Trenutno\AGP on polygons with holes\Kod\poligon.cpp=C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\poligon.cpp</Transaction>
+    <Transaction>2023/10/19 17:30:41.000.013,G:\My Drive\Trenutno\AGP on polygons with holes\Kod\projectPCH1.h=C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\projectPCH1.h</Transaction>
+    <Transaction>2023/10/19 17:30:43.000.979,G:\My Drive\Trenutno\AGP on polygons with holes\Kod\project.cbproj=C:\Users\eminm\OneDrive\Documents\Embarcadero\Studio\Projects\project.cbproj</Transaction>
+    <Transaction>2023/11/08 22:12:11.000.004,=C:\Users\ACER\Desktop\AGP\Builder_code\campus.txt</Transaction>
+    <Transaction>2023/11/09 18:05:25.000.300,C:\Users\ACER\Desktop\AGP\Builder_code\campus.txt=</Transaction>
+    <Transaction>2023/11/09 19:03:24.000.577,=C:\Users\ACER\Desktop\AGP\Builder_code\campus.txt</Transaction>
+    <Transaction>2023/11/09 19:03:55.000.168,C:\Users\ACER\Desktop\AGP\Builder_code\campus.txt=</Transaction>
+    <Transaction>2023/11/09 19:14:44.000.013,=C:\Users\ACER\Desktop\AGP\Builder_code\New1.txt</Transaction>
+    <Transaction>2023/11/29 18:07:23.000.344,=C:\Users\eminm\OneDrive\Desktop\CDT-master\CDT-master\CDT\include\Triangulation.hpp</Transaction>
+    <Transaction>2023/11/29 18:07:23.000.078,=C:\Users\eminm\OneDrive\Desktop\CDT-master\CDT-master\CDT\include\CDTUtils.h</Transaction>
+    <Transaction>2023/11/29 18:07:23.000.177,=C:\Users\eminm\OneDrive\Desktop\CDT-master\CDT-master\CDT\include\LocatorKDTree.h</Transaction>
+    <Transaction>2023/11/29 18:07:23.000.211,=C:\Users\eminm\OneDrive\Desktop\CDT-master\CDT-master\CDT\include\portable_nth_element.hpp</Transaction>
+    <Transaction>2023/11/29 18:07:23.000.111,=C:\Users\eminm\OneDrive\Desktop\CDT-master\CDT-master\CDT\include\CDTUtils.hpp</Transaction>
+    <Transaction>2023/11/29 18:07:23.000.046,=C:\Users\eminm\OneDrive\Desktop\CDT-master\CDT-master\CDT\include\CDT.hpp</Transaction>
+    <Transaction>2023/11/29 18:07:23.000.144,=C:\Users\eminm\OneDrive\Desktop\CDT-master\CDT-master\CDT\include\KDTree.h</Transaction>
+    <Transaction>2023/11/29 18:07:23.000.013,=C:\Users\eminm\OneDrive\Desktop\CDT-master\CDT-master\CDT\include\CDT.h</Transaction>
+    <Transaction>2023/11/29 18:07:23.000.243,=C:\Users\eminm\OneDrive\Desktop\CDT-master\CDT-master\CDT\include\predicates.h</Transaction>
+    <Transaction>2023/11/29 18:07:23.000.308,=C:\Users\eminm\OneDrive\Desktop\CDT-master\CDT-master\CDT\include\Triangulation.h</Transaction>
+    <Transaction>2023/11/29 18:07:23.000.274,=C:\Users\eminm\OneDrive\Desktop\CDT-master\CDT-master\CDT\include\remove_at.hpp</Transaction>
+    <Transaction>2023/11/29 18:07:52.000.216,C:\Users\eminm\OneDrive\Desktop\Projects\Adis Projekti\AGP_with_holes\Builder_code\projectPCH1.h=</Transaction>
+    <Transaction>2023/11/29 18:13:27.000.706,=C:\Users\eminm\OneDrive\Desktop\Projects\Adis Projekti\AGP_with_holes\Builder_code\Unit1.cpp</Transaction>
+    <Transaction>2023/11/29 18:13:43.000.078,C:\Users\eminm\OneDrive\Desktop\Projects\Adis Projekti\AGP_with_holes\Builder_code\CDT.h=C:\Users\eminm\OneDrive\Desktop\Projects\Adis Projekti\AGP_with_holes\Builder_code\Unit1.h</Transaction>
+    <Transaction>2023/11/29 18:13:43.000.078,C:\Users\eminm\OneDrive\Desktop\Projects\Adis Projekti\AGP_with_holes\Builder_code\CDT.cpp=C:\Users\eminm\OneDrive\Desktop\Projects\Adis Projekti\AGP_with_holes\Builder_code\Unit1.cpp</Transaction>
+    <Transaction>2023/11/29 18:15:45.000.027,C:\Users\eminm\OneDrive\Desktop\Projects\Adis Projekti\AGP_with_holes\Builder_code\CDT.cpp=</Transaction>
+    <Transaction>2023/11/29 18:16:08.000.021,=C:\Users\eminm\OneDrive\Desktop\Projects\Adis Projekti\AGP_with_holes\Builder_code\CDT.cpp</Transaction>
+    <Transaction>2023/11/29 22:50:45.000.285,=C:\Users\eminm\OneDrive\Desktop\Projects\Adis Projekti\AGP_with_holes-programing-expert\AGP_with_holes-programing-expert\Builder_code\CDT\CDT.h</Transaction>
+  </Transactions>
+</BorlandProject>
