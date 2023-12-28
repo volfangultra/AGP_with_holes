@@ -367,6 +367,16 @@ void Triangle::draw(TImage* image, TColor line_color){
 
 }
 
+double Triangle::calculateArea() {
+	return 0.5 * abs((A.x * (B.y - C.y) + B.x * (C.y - A.y) + C.x * (A.y - B.y)));
+}
+
+bool Triangle::compareByArea(Triangle triangle1, Triangle triangle2) {
+	return triangle1.calculateArea() < triangle2.calculateArea();
+}
+
+
+
 
 
 #pragma package(smart_init)

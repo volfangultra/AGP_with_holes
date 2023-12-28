@@ -10,8 +10,6 @@ object agp_aplication: Tagp_aplication
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = True
-  PixelsPerInch = 96
   TextHeight = 13
   object image: TImage
     Left = 8
@@ -61,48 +59,49 @@ object agp_aplication: Tagp_aplication
     Font.Style = []
     ParentFont = False
   end
-  object input_num_vertices_polygon: TEdit
+  object inputNumCameras: TEdit
     Left = 775
     Top = 24
-    Width = 83
+    Width = 164
     Height = 21
     TabOrder = 0
   end
   object generate: TButton
-    Left = 864
-    Top = 24
-    Width = 75
+    Left = 776
+    Top = 51
+    Width = 163
     Height = 21
     Caption = 'Generate'
     TabOrder = 1
+    OnClick = generateClick
   end
   object radio_draw_hole: TRadioButton
-    Left = 775
-    Top = 96
+    Left = 776
+    Top = 129
     Width = 113
     Height = 17
     Caption = 'Draw hole'
     TabOrder = 2
   end
   object radio_draw_polygon: TRadioButton
-    Left = 775
-    Top = 64
+    Left = 776
+    Top = 106
     Width = 113
     Height = 17
     Caption = 'Draw Polygon'
     TabOrder = 3
   end
   object radio_add_camera: TRadioButton
-    Left = 775
-    Top = 128
+    Left = 776
+    Top = 152
     Width = 113
     Height = 17
     Caption = 'Add Camera'
     TabOrder = 4
   end
   object button_finish_object: TButton
-    Left = 775
-    Top = 151
+    Left = 776
+    Top = 175
     Width = 164
     Height = 25
     Caption = 'Finish Object'
@@ -133,8 +132,8 @@ object agp_aplication: Tagp_aplication
     TabOrder = 8
   end
   object ButtonPolygonArea: TButton
-    Left = 775
-    Top = 182
+    Left = 776
+    Top = 206
     Width = 163
     Height = 25
     Caption = 'Polygon Area'
@@ -142,8 +141,8 @@ object agp_aplication: Tagp_aplication
     OnClick = ButtonPolygonAreaClick
   end
   object Button1: TButton
-    Left = 775
-    Top = 213
+    Left = 776
+    Top = 237
     Width = 163
     Height = 25
     Caption = 'Cameras intersection'
@@ -151,8 +150,8 @@ object agp_aplication: Tagp_aplication
     OnClick = CamerasIntersectionClick
   end
   object Button2: TButton
-    Left = 775
-    Top = 244
+    Left = 776
+    Top = 268
     Width = 163
     Height = 25
     Caption = 'Draw Campus'
@@ -168,7 +167,7 @@ object agp_aplication: Tagp_aplication
   end
   object ButtonDelaunayTriangulation: TButton
     Left = 776
-    Top = 275
+    Top = 299
     Width = 163
     Height = 25
     Caption = 'Delone trianguliraj'
@@ -177,7 +176,7 @@ object agp_aplication: Tagp_aplication
   end
   object coverArtGallery: TButton
     Left = 776
-    Top = 337
+    Top = 361
     Width = 163
     Height = 25
     Caption = 'Cover Art Gallery'
@@ -186,11 +185,20 @@ object agp_aplication: Tagp_aplication
   end
   object button_color_vertices: TButton
     Left = 776
-    Top = 306
+    Top = 330
     Width = 163
     Height = 25
     Caption = 'Color vertices'
     TabOrder = 15
     OnClick = button_color_verticesClick
+  end
+  object Button3: TButton
+    Left = 776
+    Top = 80
+    Width = 163
+    Height = 25
+    Caption = 'Generate 2'
+    TabOrder = 16
+    OnClick = generate2Click
   end
 end

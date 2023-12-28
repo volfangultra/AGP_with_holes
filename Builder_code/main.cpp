@@ -123,13 +123,13 @@ void __fastcall Tagp_aplication::image_mouse_up(TObject *Sender, TMouseButton Bu
 void __fastcall Tagp_aplication::button_clean_click(TObject *Sender){
 	image->Canvas->Brush->Color = clWhite;
 	image->Canvas->FillRect(Rect(0, 0, image->Width, image->Height));
-    image->Canvas->Brush->Color = clBlack;
+	image->Canvas->Brush->Color = clBlack;
 	image->Canvas->FrameRect(Rect(0, 0, image->Width, image->Height));
 	image->Canvas->Brush->Color = clWhite;
 	outside_polygon = Simple_polygon();
 	holes = vector<Simple_polygon>();
 	cameras.clear();
-    delaunay_triangles = vector<vector<Vertex>>();
+	delaunay_triangles = vector<vector<Vertex>>();
 }
 //---------------------------------------------------------------------------
 
@@ -190,7 +190,7 @@ void __fastcall Tagp_aplication::CamerasIntersectionClick(TObject *Sender)
 
 void __fastcall Tagp_aplication::ButtonDrawCampusClick(TObject *Sender)
 {
-	ifstream inputFileCampus("C:/Users/eminm/OneDrive/Desktop/AGP_with_holes-programing-expert/Builder_code/campus.txt");
+	ifstream inputFileCampus("C:/Users/ACER/Desktop/AGP 2/AGP_with_holes/Builder_code/campus.txt");
 	if (inputFileCampus.is_open()) {
 		string line;
 		while (getline(inputFileCampus, line)) {
@@ -206,7 +206,7 @@ void __fastcall Tagp_aplication::ButtonDrawCampusClick(TObject *Sender)
 		outside_polygon.fill_color(image);
 		inputFileCampus.close();
 	}
-	ifstream inputFileHoles("C:/Users/eminm/OneDrive/Desktop/AGP_with_holes-programing-expert/Builder_code/holes.txt");
+	ifstream inputFileHoles("C:/Users/ACER/Desktop/AGP 2/AGP_with_holes/Builder_code/holes.txt");
 	if (inputFileHoles.is_open()) {
 		string line;
 		int broj_rupa(holes.size());
@@ -288,7 +288,7 @@ void __fastcall Tagp_aplication::ButtonDelaunayTriangulationClick(TObject *Sende
 //---------------------------------------------------------------------------
 void __fastcall Tagp_aplication::coverArtGalleryClick(TObject *Sender)
 {
-    CDT::Triangulation<double> cdt;
+	CDT::Triangulation<double> cdt;
 	vector<Vertex> all_vertices = outside_polygon.vertices;
 	for(auto hole:holes)
 		for(auto vertex:hole.vertices)
@@ -460,6 +460,292 @@ void __fastcall Tagp_aplication::button_color_verticesClick(TObject *Sender)
 	string text = "crveni=" + to_string(crveni) + "\nzuti=" + to_string(zuti) + "\nzeleni=" + to_string(zeleni);
 	ShowMessage(text.c_str());
 
+}
+//---------------------------------------------------------------------------
+
+double calculateArea(Vertex A, Vertex B, Vertex C) {
+	return 0.5 * abs((A.x * (B.y - C.y) + B.x * (C.y - A.y) + C.x * (A.y - B.y)));
+}
+
+bool compareByArea(vector<Vertex> t1, vector<Vertex> t2) {
+	return calculateArea(t1[0], t1[1], t1[2]) > calculateArea(t2[0], t2[1], t2[2]);
+}
+
+void Camera::iscrtajKameru(int direction_x, int direction_y, Vertex center, TColor color, TImage* image, Simple_polygon& outside_polygon, vector<Simple_polygon>& holes) {
+	direction_x -= center.x;
+	direction_y -= center.y;
+	double alpha = RADIUS/sqrt(direction_x*direction_x + direction_y*direction_y);
+	Vertex end(center.x + alpha * direction_x, center.y + alpha * direction_y);
+	center.x += 0.02*alpha * direction_x;
+	center.y += 0.02*alpha * direction_y;
+	view.vertices.push_back(center);
+
+	Vertex temp = end.rotate(center, FILL_ANGLE /2);
+	for(int i = 0; i < ACCURACY; i++){
+		view.vertices.push_back(temp);
+		temp = temp.rotate(center, -1 * FILL_ANGLE/ACCURACY);
+	}
+	view.vertices.push_back(temp);
+
+	for(auto rupa:holes) {
+		hit(rupa);
+	}
+
+	hit(outside_polygon);
+	fill_color(image, color);
+	draw(image, color, color);
+
+}
+
+double Tagp_aplication::pokrij(){
+	image->Canvas->Brush->Color = clWhite;
+	image->Canvas->FillRect(Rect(0, 0, image->Width, image->Height));
+	image->Canvas->Brush->Color = clBlack;
+	image->Canvas->FrameRect(Rect(0, 0, image->Width, image->Height));
+	image->Canvas->Brush->Color = clWhite;
+	outside_polygon = Simple_polygon();
+	holes = vector<Simple_polygon>();
+	cameras.pop_back();
+	ButtonDrawCampusClick(this);
+	image->Canvas->Brush->Color = clYellow;
+	for(auto c : cameras) {
+	   c.fill_color(image, clYellow);
+	   c.draw(image, clYellow, clYellow);
+	}
+	image->Canvas->Brush->Color = clWhite;
+	return covered_surface_area(image, outside_polygon, holes);
+
+}
+
+void __fastcall Tagp_aplication::generateClick(TObject *Sender)
+{
+	int num_cameras = inputNumCameras->Text.ToInt();
+	sort(delaunay_triangles.begin(), delaunay_triangles.end(), compareByArea);
+	int counter = 0;
+	for (auto trougao : delaunay_triangles){
+
+		if (counter >= num_cameras)
+			break;
+
+		Vertex center;
+		int direction_x;
+		int direction_y;
+
+		double pokrivenost = 0;
+		int najbolja_pozicija = 0;
+		for (int i = 0; i < 3; i++) {
+			center.x = trougao[i].x;
+			center.y = trougao[i].y;
+			direction_x = (trougao[(i+1)%3].x + trougao[(i+2)%3].x)/2;
+			direction_y = (trougao[(i+1)%3].y + trougao[(i+2)%3].y)/2;
+			Simple_polygon view, view2;
+			Camera c(view), c2(view2);
+			c.iscrtajKameru(direction_x, direction_y, center, clYellow, image, outside_polygon, holes);
+			cameras.push_back(c);
+			int trenutna_pokrivenost = covered_surface_area(image, outside_polygon, holes);
+			if (pokrivenost < trenutna_pokrivenost) {
+				pokrivenost = trenutna_pokrivenost;
+				najbolja_pozicija = i;
+			}
+			double odnos = pokrij();
+		}
+
+        Simple_polygon view;
+		Camera c(view);
+		center.x = trougao[najbolja_pozicija].x;
+		center.y = trougao[najbolja_pozicija].y;
+		direction_x = (trougao[(najbolja_pozicija+1)%3].x + trougao[(najbolja_pozicija+2)%3].x)/2;
+		direction_y = (trougao[(najbolja_pozicija+1)%3].y + trougao[(najbolja_pozicija+2)%3].y)/2;
+		c.iscrtajKameru(direction_x, direction_y, center, clYellow, image, outside_polygon, holes);
+		//c.fill_color(image, clYellow);
+		cameras.push_back(c);
+		counter++;
+
+
+
+
+		text_num_cameras->Text = to_string(cameras.size()).c_str();
+	}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall Tagp_aplication::generate2Click(TObject *Sender){
+		int num_cameras = inputNumCameras->Text.ToInt();
+		sort(delaunay_triangles.begin(), delaunay_triangles.end(), compareByArea);
+		int counter = 0;
+
+		for (auto trougao : delaunay_triangles){
+			Vertex center;
+			Vertex center2;
+			Vertex center3;
+			Vertex center4;
+			int direction_x2;
+			int direction_y2;
+			int direction_x;
+			int direction_y;
+			int direction_x3;
+			int direction_y3;
+			int direction_x4;
+			int direction_y4;
+			double povrsina = 0;
+			povrsina = Simple_polygon({trougao[0], trougao[1], trougao[2]}).surface_area();
+			if(povrsina >= 1000 && povrsina < 6000){
+				center3.x = (trougao[0].x + trougao[1].x + trougao[2].x)/3;
+				center3.y = (trougao[0].y + trougao[1].y + trougao[2].y)/3;
+				direction_x3 = (trougao[1].x + trougao[0].x)/2;
+				direction_y3 = (trougao[1].y + trougao[0].y)/2;
+			}
+
+			if(povrsina >= 8000){
+				center.x = trougao[2].x;
+				center.y = trougao[2].y;
+				direction_x = (trougao[1].x + trougao[0].x)/2;
+				direction_y = (trougao[1].y + trougao[0].y)/2;
+			}
+
+			if(povrsina >= 12000){
+				center2.x = trougao[1].x;
+				center2.y = trougao[1].y;
+				direction_x2 = (trougao[2].x + trougao[0].x)/2;
+				direction_y2 = (trougao[2].y + trougao[0].y)/2;
+			}
+			if(povrsina >= 16000){
+				center4.x = trougao[0].x;
+				center4.y = trougao[0].y;
+				direction_x4 = (trougao[2].x + trougao[1].x)/2;
+				direction_y4 = (trougao[2].y + trougao[1].y)/2;
+			}
+
+			if(povrsina >= 1000 && povrsina <= 6000){
+				Simple_polygon view;
+				Camera circled_c(view, 2*3.14159265359, 64);
+				direction_x3 -= center3.x;
+				direction_y3 -= center3.y;
+				double alpha = circled_c.RADIUS/sqrt(direction_x3*direction_x3 + direction_y3*direction_y3);
+				Vertex end2(center3.x + alpha * direction_x3, center3.y + alpha * direction_y3);
+				center3.x += 0.02*alpha * direction_x2;
+				center3.y += 0.02*alpha * direction_y2;
+				circled_c.view.vertices.push_back(center3);
+
+				Vertex temp2 = end2.rotate(center3, circled_c.FILL_ANGLE /2);
+				for(int i = 0; i < circled_c.ACCURACY; i++){
+					circled_c.view.vertices.push_back(temp2);
+					temp2 = temp2.rotate(center3, -1 * circled_c.FILL_ANGLE/circled_c.ACCURACY);
+				}
+				circled_c.view.vertices.push_back(temp2);
+
+				for(auto rupa:holes) {
+					circled_c.hit(rupa);
+				}
+
+				circled_c.hit(outside_polygon);
+				circled_c.fill_color(image, clYellow);
+				circled_c.draw(image, clYellow, clYellow);
+				cameras.push_back(circled_c);
+
+				counter++;
+				if (counter == num_cameras)
+					break;
+			}
+			if(povrsina >= 8000){
+				Simple_polygon view;
+				Camera c(view);
+
+				direction_x -= center.x;
+				direction_y -= center.y;
+				double alpha = c.RADIUS/sqrt(direction_x*direction_x + direction_y*direction_y);
+				Vertex end(center.x + alpha * direction_x, center.y + alpha * direction_y);
+				center.x += 0.02*alpha * direction_x;
+				center.y += 0.02*alpha * direction_y;
+				c.view.vertices.push_back(center);
+
+				Vertex temp = end.rotate(center, c.FILL_ANGLE /2);
+				for(int i = 0; i < c.ACCURACY; i++){
+					c.view.vertices.push_back(temp);
+					temp = temp.rotate(center, -1 * c.FILL_ANGLE/c.ACCURACY);
+				}
+				c.view.vertices.push_back(temp);
+
+				for(auto rupa:holes) {
+					c.hit(rupa);
+				}
+
+				c.hit(outside_polygon);
+				c.fill_color(image);
+				c.draw(image, clYellow, clYellow);
+
+				cameras.push_back(c);
+				counter++;
+				if (counter == num_cameras)
+					break;
+			}
+			if(povrsina >= 12000){
+				Simple_polygon view;
+				Camera c(view);
+
+				direction_x2 -= center2.x;
+				direction_y2 -= center2.y;
+				double alpha = c.RADIUS/sqrt(direction_x2*direction_x2 + direction_y2*direction_y2);
+				Vertex end(center2.x + alpha * direction_x2, center2.y + alpha * direction_y2);
+				center2.x += 0.02*alpha * direction_x2;
+				center2.y += 0.02*alpha * direction_y2;
+				c.view.vertices.push_back(center2);
+
+				Vertex temp = end.rotate(center2, c.FILL_ANGLE /2);
+				for(int i = 0; i < c.ACCURACY; i++){
+					c.view.vertices.push_back(temp);
+					temp = temp.rotate(center2, -1 * c.FILL_ANGLE/c.ACCURACY);
+				}
+				c.view.vertices.push_back(temp);
+
+				for(auto rupa:holes) {
+					c.hit(rupa);
+				}
+
+				c.hit(outside_polygon);
+				c.fill_color(image);
+				c.draw(image, clYellow, clYellow);
+
+				cameras.push_back(c);
+				counter++;
+				if (counter == num_cameras)
+					break;
+			}
+			if(povrsina >= 16000){
+				Simple_polygon view;
+				Camera c(view);
+
+				direction_x4 -= center4.x;
+				direction_y4 -= center4.y;
+				double alpha = c.RADIUS/sqrt(direction_x4*direction_x4 + direction_y4*direction_y4);
+				Vertex end(center4.x + alpha * direction_x4, center4.y + alpha * direction_y4);
+				center4.x += 0.02*alpha * direction_x4;
+				center4.y += 0.02*alpha * direction_y4;
+				c.view.vertices.push_back(center4);
+
+				Vertex temp = end.rotate(center4, c.FILL_ANGLE /2);
+				for(int i = 0; i < c.ACCURACY; i++){
+					c.view.vertices.push_back(temp);
+					temp = temp.rotate(center4, -1 * c.FILL_ANGLE/c.ACCURACY);
+				}
+				c.view.vertices.push_back(temp);
+
+				for(auto rupa:holes) {
+					c.hit(rupa);
+				}
+
+				c.hit(outside_polygon);
+				c.fill_color(image);
+				c.draw(image, clYellow, clYellow);
+
+				cameras.push_back(c);
+				counter++;
+				if (counter == num_cameras)
+					break;
+
+			}
+		}
+		text_num_cameras->Text = to_string(cameras.size()).c_str();
 }
 //---------------------------------------------------------------------------
 

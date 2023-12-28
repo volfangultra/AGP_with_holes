@@ -14,7 +14,7 @@
 class Tagp_aplication : public TForm
 {
 __published:	// IDE-managed Components
-	TEdit *input_num_vertices_polygon;
+	TEdit *inputNumCameras;
 	TButton *generate;
 	TRadioButton *radio_draw_hole;
 	TRadioButton *radio_draw_polygon;
@@ -34,6 +34,7 @@ __published:	// IDE-managed Components
 	TButton *ButtonDelaunayTriangulation;
 	TButton *coverArtGallery;
 	TButton *button_color_vertices;
+	TButton *Button3;
 	void __fastcall image_mouse_down(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall image_mouse_up(TObject *Sender, TMouseButton Button, TShiftState Shift, int X, int Y);
 	void __fastcall image_mouse_move(TObject *Sender, TShiftState Shift, int X, int Y);
@@ -45,12 +46,14 @@ __published:	// IDE-managed Components
 	void __fastcall ButtonDelaunayTriangulationClick(TObject *Sender);
 	void __fastcall coverArtGalleryClick(TObject *Sender);
 	void __fastcall button_color_verticesClick(TObject *Sender);
+	void __fastcall generateClick(TObject *Sender);
+	void __fastcall generate2Click(TObject *Sender);
 private:	// User declarations
 	Simple_polygon outside_polygon;
 	vector<Simple_polygon> holes;
 	vector<Camera> cameras;
 	vector<vector<Vertex>> delaunay_triangles;
-
+    double pokrij();
 
 public:		// User declarations
 	__fastcall Tagp_aplication(TComponent* Owner);
