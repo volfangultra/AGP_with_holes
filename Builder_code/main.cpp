@@ -522,6 +522,8 @@ void __fastcall Tagp_aplication::generateClick(TObject *Sender)
 	int num_cameras = inputNumCameras->Text.ToInt();
 	sort(delaunay_triangles.begin(), delaunay_triangles.end(), compareByArea);
 	int counter = 0;
+	double generalna_pokrivenost = 0;
+	double epsilon = 0;
 	for (auto trougao : delaunay_triangles){
 
 		if (counter >= num_cameras)
@@ -542,15 +544,23 @@ void __fastcall Tagp_aplication::generateClick(TObject *Sender)
 			Camera c(view), c2(view2);
 			c.iscrtajKameru(direction_x, direction_y, center, clYellow, image, outside_polygon, holes);
 			cameras.push_back(c);
-			int trenutna_pokrivenost = covered_surface_area(image, outside_polygon, holes);
+			double trenutna_pokrivenost = covered_surface_area(image, outside_polygon, holes);
 			if (pokrivenost < trenutna_pokrivenost) {
 				pokrivenost = trenutna_pokrivenost;
 				najbolja_pozicija = i;
 			}
 			double odnos = pokrij();
 		}
+		ShowMessage(pokrivenost);
+		ShowMessage(generalna_pokrivenost);
 
-        Simple_polygon view;
+		if(pokrivenost - generalna_pokrivenost > 0.103-epsilon) {
+			//ShowMessage(cameras.size());
+			//epsilon+=0.004;
+
+		//ShowMessage("usao u if");
+
+		Simple_polygon view;
 		Camera c(view);
 		center.x = trougao[najbolja_pozicija].x;
 		center.y = trougao[najbolja_pozicija].y;
@@ -560,8 +570,9 @@ void __fastcall Tagp_aplication::generateClick(TObject *Sender)
 		//c.fill_color(image, clYellow);
 		cameras.push_back(c);
 		counter++;
-
-
+		generalna_pokrivenost = pokrivenost;
+		}
+		 epsilon+=0.004;
 
 
 		text_num_cameras->Text = to_string(cameras.size()).c_str();
