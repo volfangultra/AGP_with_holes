@@ -2,8 +2,8 @@ object agp_aplication: Tagp_aplication
   Left = 0
   Top = 0
   Caption = 'AGP'
-  ClientHeight = 685
-  ClientWidth = 968
+  ClientHeight = 684
+  ClientWidth = 964
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

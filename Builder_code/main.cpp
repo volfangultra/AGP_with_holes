@@ -190,7 +190,7 @@ void __fastcall Tagp_aplication::CamerasIntersectionClick(TObject *Sender)
 
 void __fastcall Tagp_aplication::ButtonDrawCampusClick(TObject *Sender)
 {
-	ifstream inputFileCampus("C:/Users/ACER/Desktop/AGP 2/AGP_with_holes/Builder_code/campus.txt");
+	ifstream inputFileCampus("C:/Users/nedim/Desktop/AGP_2algor/AGP_with_holes/Builder_code/campus.txt");
 	if (inputFileCampus.is_open()) {
 		string line;
 		while (getline(inputFileCampus, line)) {
@@ -206,7 +206,7 @@ void __fastcall Tagp_aplication::ButtonDrawCampusClick(TObject *Sender)
 		outside_polygon.fill_color(image);
 		inputFileCampus.close();
 	}
-	ifstream inputFileHoles("C:/Users/ACER/Desktop/AGP 2/AGP_with_holes/Builder_code/holes.txt");
+	ifstream inputFileHoles("C:/Users/nedim/Desktop/AGP_2algor/AGP_with_holes/Builder_code/holes.txt");
 	if (inputFileHoles.is_open()) {
 		string line;
 		int broj_rupa(holes.size());
