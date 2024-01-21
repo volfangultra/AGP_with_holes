@@ -16,6 +16,7 @@
 #pragma resource "*.dfm"
 Tagp_aplication *agp_aplication;
 int start_x, start_y;
+bool kampus = false;
 using namespace std;
 //---------------------------------------------------------------------------
 double covered_surface_area(TImage* image, Simple_polygon& poly, vector<Simple_polygon>& holes) {
@@ -140,6 +141,7 @@ void __fastcall Tagp_aplication::button_finish_object_click(TObject *Sender){
 			return;
 		Segment(outside_polygon.vertices[n - 1], outside_polygon.vertices[0]).draw(image);
 		outside_polygon.fill_color(image);
+        kampus = false;
 	}
 	else if(radio_draw_hole->Checked){
 		int broj_rupa(holes.size());
@@ -190,7 +192,8 @@ void __fastcall Tagp_aplication::CamerasIntersectionClick(TObject *Sender)
 
 void __fastcall Tagp_aplication::ButtonDrawCampusClick(TObject *Sender)
 {
-	ifstream inputFileCampus("C:/Users/nedim/Desktop/AGP_2algor/AGP_with_holes/Builder_code/campus.txt");
+	kampus = true;
+	ifstream inputFileCampus("C:/Users/ACER/Desktop/AGP 3/AGP_with_holes/Builder_code/campus.txt");
 	if (inputFileCampus.is_open()) {
 		string line;
 		while (getline(inputFileCampus, line)) {
@@ -206,7 +209,7 @@ void __fastcall Tagp_aplication::ButtonDrawCampusClick(TObject *Sender)
 		outside_polygon.fill_color(image);
 		inputFileCampus.close();
 	}
-	ifstream inputFileHoles("C:/Users/nedim/Desktop/AGP_2algor/AGP_with_holes/Builder_code/holes.txt");
+	ifstream inputFileHoles("C:/Users/ACER/Desktop/AGP 3/AGP_with_holes/Builder_code/holes.txt");
 	if (inputFileHoles.is_open()) {
 		string line;
 		int broj_rupa(holes.size());
@@ -503,10 +506,22 @@ double Tagp_aplication::pokrij(){
 	image->Canvas->Brush->Color = clBlack;
 	image->Canvas->FrameRect(Rect(0, 0, image->Width, image->Height));
 	image->Canvas->Brush->Color = clWhite;
-	outside_polygon = Simple_polygon();
-	holes = vector<Simple_polygon>();
+
 	cameras.pop_back();
-	ButtonDrawCampusClick(this);
+	if (kampus) {
+       outside_polygon = Simple_polygon();
+	   holes = vector<Simple_polygon>();
+	   ButtonDrawCampusClick(this);
+	} else {
+		//ShowMessage(holes.size());
+		outside_polygon.draw(image);
+		outside_polygon.fill_color(image, clAqua);
+		for(int i=0; i<holes.size()-1; ++i) {
+            holes[i].draw(image);
+			holes[i].fill_color(image, clWhite);
+		}
+    }
+
 	image->Canvas->Brush->Color = clYellow;
 	for(auto c : cameras) {
 	   c.fill_color(image, clYellow);
@@ -534,14 +549,24 @@ void __fastcall Tagp_aplication::generateClick(TObject *Sender)
 		int direction_y;
 
 		double pokrivenost = 0;
+		bool okrugla = false;
 		int najbolja_pozicija = 0;
-		for (int i = 0; i < 3; i++) {
-			center.x = trougao[i].x;
-			center.y = trougao[i].y;
-			direction_x = (trougao[(i+1)%3].x + trougao[(i+2)%3].x)/2;
-			direction_y = (trougao[(i+1)%3].y + trougao[(i+2)%3].y)/2;
-			Simple_polygon view, view2;
-			Camera c(view), c2(view2);
+		for (int i = 0; i < 4; i++) {
+			Simple_polygon view;
+			Camera c(view);
+			if(i != 3) {
+				center.x = trougao[i].x;
+				center.y = trougao[i].y;
+				direction_x = (trougao[(i+1)%3].x + trougao[(i+2)%3].x)/2;
+				direction_y = (trougao[(i+1)%3].y + trougao[(i+2)%3].y)/2;
+			} else {
+				center.x = (trougao[0].x + trougao[1].x + trougao[2].x)/3;
+				center.y = (trougao[0].y + trougao[1].y + trougao[2].y)/3;
+				direction_x = (trougao[1].x + trougao[0].x)/2;
+				direction_y = (trougao[1].y + trougao[0].y)/2;
+				c.setAngleAndRadius(2*3.14159265359, 64);
+			}
+
 			c.iscrtajKameru(direction_x, direction_y, center, clYellow, image, outside_polygon, holes);
 			cameras.push_back(c);
 			double trenutna_pokrivenost = covered_surface_area(image, outside_polygon, holes);
@@ -551,28 +576,34 @@ void __fastcall Tagp_aplication::generateClick(TObject *Sender)
 			}
 			double odnos = pokrij();
 		}
+		/*
 		ShowMessage(pokrivenost);
-		ShowMessage(generalna_pokrivenost);
+		ShowMessage(generalna_pokrivenost); */
+		//ShowMessage(najbolja_pozicija);
 
-		if(pokrivenost - generalna_pokrivenost > 0.103-epsilon) {
-			//ShowMessage(cameras.size());
-			//epsilon+=0.004;
+		if((pokrivenost - generalna_pokrivenost > 0.1-epsilon && najbolja_pozicija!=3) || (pokrivenost - generalna_pokrivenost > 0.045-epsilon && najbolja_pozicija==3)) {
+			Simple_polygon view;
+			Camera c(view);
+			if(najbolja_pozicija != 3) {
+				center.x = trougao[najbolja_pozicija].x;
+				center.y = trougao[najbolja_pozicija].y;
+				direction_x = (trougao[(najbolja_pozicija+1)%3].x + trougao[(najbolja_pozicija+2)%3].x)/2;
+				direction_y = (trougao[(najbolja_pozicija+1)%3].y + trougao[(najbolja_pozicija+2)%3].y)/2;
+			} else {
+				center.x = (trougao[0].x + trougao[1].x + trougao[2].x)/3;
+				center.y = (trougao[0].y + trougao[1].y + trougao[2].y)/3;
+				direction_x = (trougao[1].x + trougao[0].x)/2;
+				direction_y = (trougao[1].y + trougao[0].y)/2;
+				c.setAngleAndRadius(2*3.14159265359, 64);
+			}
 
-		//ShowMessage("usao u if");
-
-		Simple_polygon view;
-		Camera c(view);
-		center.x = trougao[najbolja_pozicija].x;
-		center.y = trougao[najbolja_pozicija].y;
-		direction_x = (trougao[(najbolja_pozicija+1)%3].x + trougao[(najbolja_pozicija+2)%3].x)/2;
-		direction_y = (trougao[(najbolja_pozicija+1)%3].y + trougao[(najbolja_pozicija+2)%3].y)/2;
-		c.iscrtajKameru(direction_x, direction_y, center, clYellow, image, outside_polygon, holes);
-		//c.fill_color(image, clYellow);
-		cameras.push_back(c);
-		counter++;
-		generalna_pokrivenost = pokrivenost;
+			c.iscrtajKameru(direction_x, direction_y, center, clYellow, image, outside_polygon, holes);
+			//c.fill_color(image, clYellow);
+			cameras.push_back(c);
+			counter++;
+			generalna_pokrivenost = pokrivenost;
 		}
-		 epsilon+=0.004;
+		epsilon+=0.003;
 
 
 		text_num_cameras->Text = to_string(cameras.size()).c_str();

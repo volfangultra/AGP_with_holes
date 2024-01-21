@@ -70,12 +70,13 @@ class Camera{
 	int RADIUS;
 	const int ACCURACY = 100;
 public:
-	Camera(Simple_polygon v):view(v),FILL_ANGLE((2./3)*3.141592), RADIUS(160) {};
+	Camera(Simple_polygon v):view(v),FILL_ANGLE((4./9)*3.141592), RADIUS(200) {};
 	Camera(Simple_polygon v, float fill_angle, int radius):view(v),FILL_ANGLE(fill_angle), RADIUS(radius) {};
 	void draw(TImage*, TColor vertice_color=clGreen, TColor fill_color=clYellow);
 	void fill_color(TImage*, TColor boja = clYellow);
 	void hit(Simple_polygon&);
 	void iscrtajKameru(int direction_x, int direction_y, Vertex center, TColor color, TImage* image, Simple_polygon& outside_polygon, vector<Simple_polygon>& holes);
+	void setAngleAndRadius(float angle, int radius) { this->FILL_ANGLE = angle; this->RADIUS = radius; }
 	friend class Tagp_aplication;
 
 };
